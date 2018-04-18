@@ -1,0 +1,46 @@
+<div class="modal-content">
+	<div class="modal-header text-center ng-scope">
+		<button class="close f-25" ng-click="vm.dismiss()">&times;</button>
+		<h4 class="modal-title new-role-title f-300">Create New Role</h4>
+	</div>
+
+	<div class="modal-body ng-scope">
+		<div class="container col-md-12">
+			<div class="row">
+				<div class="fg-line m-b-25">
+					<input type="text" class="form-control" placeholder="Role Name" ng-model="vm.userRole.role">
+				</div>
+
+				<!-- <div class="col-md-6" ng-repeat="permission in vm.permissions"> 
+					<div class="checkbox m-b-25">
+						<label> {{permission.permissionName}} ( {{permission.permissionGroup}} )
+							<input type="checkbox" ng-model="permission.isChecked">
+							<i class="input-helper"></i>
+						</label>
+					</div>
+				</div> -->
+			</div> 
+		</div>
+	</div>
+
+	<div class=" col-md-12">
+		<div class="checkbox m-b-25 col-md-3" ng-repeat="permissionGroup in vm.permissionGroups">
+			<h4 class="f-300 m-b-20"><b>{{permissionGroup.permissionGroup}}</b></h4>
+			<hr class="hr-border2 m-t-15">
+			<div class="checkbox m-b-25" ng-repeat="permission in vm.permissions">
+				<div ng-if="permission.permissionGroup==permissionGroup.permissionGroup">
+					<label>{{permission.permissionName}} 
+						<input type="checkbox" value="" checked ng-model="permission.isChecked"> <i class="input-helper"></i> 
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal-footer">
+			<div class="m-t-20 text-right">
+				<button class="btn-modal-cancel waves-effect m-r-10" ng-click="vm.dismiss()">Cancel</button>
+				<button class="btn-modal waves-effect" ng-click="vm.createRole()">Create</button>
+			</div>
+		</div>
+</div> 

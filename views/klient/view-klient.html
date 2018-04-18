@@ -1,0 +1,83 @@
+<div class="container">
+    <div class="row">
+        <div class="text-right m-t-15">
+            <ul class="list-inline m-t-10 m-r-10">
+                <li><input type="search" placeholder="Search" ng-model="vm.filter"></li>
+                <!-- <li><input type="search" placeholder="Search" id="myInputTextField"></li> -->
+                <li><button class="btn btn-default btn-icon top-icon"><i class="zmdi zmdi-home"></i></button></li>
+                <li><button class="btn btn-default btn-icon top-icon"><i class="zmdi zmdi-search"></i></button></li>
+                <li><button class="btn btn-default btn-icon top-icon"><i class="zmdi zmdi-more-vert"></i></button></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 card-body m-t-20">
+            <div class="card-header ch-alt">
+                <h2>Klients</h2>
+
+                <ul class="actions">
+                    <li>
+                        <a href="" tooltip-placement="top" tooltip="View All">
+                            <i class="zmdi zmdi-view-list"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="" tooltip-placement="top" tooltip="Add" ng-click="vm.addDepartment()">
+                            <i class="zmdi zmdi-plus-circle-o"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="" tooltip-placement="top" tooltip="Delete">
+                            <i class="zmdi zmdi-delete"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="" tooltip-placement="top" tooltip="Remove">
+                            <i class="zmdi zmdi-close"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <table datatable="ng" id="myTable" dt-options="vm.dtOptions" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="w-25" sortable="false" style="background:none">
+                            <label class="checkbox checkbox-inline">
+                                <input type="checkbox" ng-change="vm.toggleAll()" ng-model="vm.isAllSelected">
+                                <i class="input-helper"></i>
+                            </label>
+                        </th>
+                        <th class="t-normal w-50">ID</th>
+                        <th class="t-normal">Klient's name</th>
+                        <th class="t-normal">Type</th>
+                        <th class="t-normal">No. Campaign</th>
+                        <th class="t-normal">Status</th>
+                        <th class="t-normal">Created Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="pointer" ng-repeat="temp in vm.tableData | filter:vm.filter" ng-model="item.Selected" ng-dblclick="vm.viewDepartment()">
+                        <td>
+                            <label class="checkbox checkbox-inline">
+                                <input type="checkbox" ng-model="temp.selected" ng-change="vm.optionToggled(temp)">
+                                <i class="input-helper"></i>
+                            </label>
+                        </td>
+                        <td>{{ temp.id }}</td>
+                        <td>{{ temp.name }}</td>
+                        <td>{{ temp.type }}</td>
+                        <td>{{ temp.NoCampaign }}</td>
+                        <td class="bold" ng-class="{'klient-archive-status': temp.status=='Archive', 'klient-active-status': temp.status=='Active'}"><span class="klient-status">{{ temp.status }}</span></td>
+                        <td>{{ temp.createdDate }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+
+</script>
+

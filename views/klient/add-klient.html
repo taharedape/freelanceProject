@@ -1,0 +1,159 @@
+<div class="modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button class="close f-25" ng-click="vm.cancel()">×</button>
+			<h4 class="modal-title text-left f-300">Create New Klient</h4>
+		</div>
+
+		<div class="modal-body">
+			<h5>Settings</h5>
+
+			<div class="m-t-15">
+				<div>
+					<form name="addKlientForm" ng-submit="vm.createKlient()">					
+						<div class="col-md-6 p-l-0">
+							<div class="form-group">
+								<label for="company-name">Klient's Company Name</label>
+								<input type="text" name="companyName" class="form-control input-border p-l-10" ng-model="vm.company.companyName" required>
+								<span ng-show="addKlientForm.$submitted || addKlientForm.companyName.$touched" class="f-red">
+			                        <small class="p-absolute" ng-show="addKlientForm.companyName.$error.required">Enter company name</small>
+			                        <!-- <small class="p-absolute" ng-show="addKlientForm.companyName.$error.minlength">Name too short</small> -->
+			                    </span>
+							</div>
+						</div>
+
+						<div class="col-md-6 p-r-0">
+							<div class="form-group">
+								<label for="branch-name">Company Branch</label>
+								<input type="text" name="branchName" class="form-control input-border p-l-10" ng-model="vm.companyBranch.branchName" required>
+								<span ng-show="addKlientForm.$submitted || addKlientForm.branchName.$touched" class="f-red">
+			                        <small class="p-absolute" ng-show="addKlientForm.branchName.$error.required">Enter branch name</small>
+			                        <!-- <small class="p-absolute" ng-show="addKlientForm.branchName.$error.minlength">Branch name too short</small> -->
+			                    </span>
+							</div>
+						</div>
+
+						<div class="col-md-6 p-l-0">
+							<div class="form-group">
+								<label for="klient-name">Contact Person</label>
+								<input type="text" name="contactPerson" class="form-control input-border p-l-10" ng-model="vm.user.firstName" required ng-minlength="3">
+								<span ng-show="addKlientForm.$submitted || addKlientForm.contactPerson.$touched" class="f-red">
+			                        <small class="p-absolute" ng-show="addKlientForm.contactPerson.$error.required">Enter contact name</small>
+			                        <small class="p-absolute" ng-show="addKlientForm.contactPerson.$error.minlength">Contact name too short</small>
+			                    </span>
+							</div>
+						</div>
+
+						<div class="col-md-6 p-r-0">
+							<div class="form-group">
+								<label for="klient-email">Email</label>
+								<input type="email" name="addKlientEmail" class="form-control input-border p-l-10" ng-model="vm.user.personalEmailId" required>
+								<span ng-show="addKlientForm.$submitted || addKlientForm.addKlientEmail.$touched" class="f-red">
+			                        <small class="p-absolute" ng-show="addKlientForm.addKlientEmail.$error.required">Enter email</small> 
+			                        <small class="p-absolute" ng-show="addKlientForm.addKlientEmail.$error.email">Enter valid email</small>
+			                    </span>
+							</div>
+						</div>
+
+						<!-- <div class="col-md-6 p-0">
+							<div class="form-group">
+								<label for="klient-kr-limit">Kredit Limit</label>
+								<input type="text" class="form-control input-border p-l-10" ng-model="vm.companyBranch.kreditBalance">
+							</div>
+						</div> -->
+
+						<div class="col-md-6 p-l-0">
+							<div class="form-group">
+								<label for="klient-type">Klient Type</label>
+								<input type="text" name="klientType" class="form-control input-border p-l-10" ng-model="vm.user.klientType" required readonly>
+							</div>
+						</div>
+
+						<div class="col-md-12 p-0">
+							<h5>Address</h5>
+						</div>
+
+						<div class="col-md-6 p-0">
+							<div class="form-group">
+								<label for="add-line-1">Line 1</label>
+								<input type="text" name="klientAddress1" class="form-control input-border p-l-10" ng-model="vm.address.address1" required>
+								<span ng-show="addKlientForm.$submitted || addKlientForm.klientAddress1.$touched" class="f-red">
+			                        <small class="p-absolute" ng-show="addKlientForm.klientAddress1.$error.required">Enter address</small>
+			                        <!-- <small class="p-absolute" ng-show="addKlientForm.klientAddress1.$error.minlength">Name too short</small> -->
+			                    </span>
+							</div>
+						</div>
+
+						<div class="col-md-6 p-r-0">
+							<div class="form-group">
+								<label for="add-line-2">Line 2</label>
+								<input type="text" name="klientAddress2" class="form-control input-border p-l-10" ng-model="vm.address.address2" required>
+								<span ng-show="addKlientForm.$submitted || addKlientForm.klientAddress2.$touched" class="f-red">
+			                        <small class="p-absolute" ng-show="addKlientForm.klientAddress2.$error.required">Enter address</small>
+			                        <!-- <small class="p-absolute" ng-show="addKlientForm.klientAddress2.$error.minlength">Name too short</small> -->
+			                    </span>
+							</div>
+						</div>
+
+						<div class="col-md-6 p-0">
+							<div class="form-group">
+								<label for="add-city">City</label>
+								<input type="text" name="klientCity" class="form-control input-border p-l-10" ng-model="vm.address.city" required>
+								<span ng-show="addKlientForm.$submitted || addKlientForm.klientCity.$touched" class="f-red">
+			                        <small class="p-absolute" ng-show="addKlientForm.klientCity.$error.required">Enter city name</small>
+			                    </span>
+							</div>
+						</div>
+
+						<div class="col-md-6 p-r-0">
+							<div class="form-group">
+								<label for="add-state">State</label>
+								<input type="text" name="klientState" class="form-control input-border p-l-10" ng-model="vm.address.state" required>
+								<span ng-show="addKlientForm.$submitted || addKlientForm.klientState.$touched" class="f-red">
+			                        <small class="p-absolute" ng-show="addKlientForm.klientState.$error.required">Enter city name</small>
+			                    </span>
+							</div>
+						</div>
+
+						<div class="col-md-6 p-0">
+							<div class="form-group">
+								<label for="add-postal-code">Postal Code</label>
+								<input type="text" class="form-control input-border p-l-10" name="klientPostalCode" ng-model="vm.address.postalCode" ng-pattern="/^(\d{5}-\d{4}|\d{5})$/" required>
+								<span ng-show="addKlientForm.$submitted || addKlientForm.klientPostalCode.$touched" class="f-red">
+			                        <small class="p-absolute" ng-show="addKlientForm.klientPostalCode.$error.required">Enter postal code</small>
+			                        <small class="p-absolute" ng-show="addKlientForm.klientPostalCode.$error.pattern">Enter valid postal code</small>
+			                    </span>
+							</div>
+						</div>
+
+						<div class="col-md-6 p-r-0">
+							<div class="form-group">
+								<label for="add-country">Country</label>
+								<ui-select name="klientCountry" ng-model="vm.selectedCountry" theme="selectize" required>
+									<ui-select-match>
+										<span>{{vm.selectedCountry.name}}</span>
+									</ui-select-match>
+									<ui-select-choices repeat="country in vm.countriesList | filter: $select.search">
+										<span ng-bind-html="country.name | highlight: $select.search"></span>
+									</ui-select-choices>
+								</ui-select>
+								<span ng-show="addKlientForm.$submitted || addKlientForm.klientCountry.$touched" class="f-red">
+			                        <small class="p-absolute" ng-show="addKlientForm.klientCountry.$error.required">Select country</small>
+			                    </span>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal-footer">
+			<div class="col-md-12 m-t-20 text-right">
+				<button class="btn-modal-cancel waves-effect m-r-10" ng-click="vm.cancel()">Cancel</button>
+				<button ng-disabled="!addKlientForm.$valid" type="submit" class="btn-modal waves-effect" ng-click="vm.createKlient()">Create</button>
+			</div>
+		</div>
+	</div> 
+</div>
+
+

@@ -1,0 +1,68 @@
+<div class="modal-header">
+    <button class="close f-40 f-w-300" ng-click="dismiss()">&times;</button>
+    <h4 class="heading-first text-left">{{campaignAsset.asset.name}}</h4>
+</div>
+<div class="modal-body p-0">
+    <div class="modal-title pb10 p-l-15">Please fill in the extra info for the assets and those are mandatory fields <span class="red">*</span> </div>
+    <div class="modal-title pb10 p-l-15" ng-show="removeflag">
+        <span class="red">Important: Please delete the extra Info Below</span>
+    </div>
+    <progressbar max="max" value="dynamic" class="asset-kandidate progressBar p-0">
+        <div class="bar l-h-3" ng-class="{'red': dynamic==0, 'm-l-37': dynamic==0 }" ng-if="dynamic!=0"></div>
+    </progressbar>
+    <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12 p-10 text-right font-999 pb0"> {{dynamic}} / {{max}}</div>
+    <div ng-repeat="asset in totalasset">
+        <div ng-if="asset_index == $index" class="p-10">
+            <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12f-15 p-l-10 ">
+                <div class="col-sm-6 col-xs-12 col-md-6 col-lg-6 font-999 f-15 p-l-10 text-left">Asset {{$index+1}} <span class="red">*</span></div>
+                <div title="Delete" class="col-sm-2 col-xs-2 col-md-1 col-lg-1 font-999 f-20 pull-right pointer f-red delete-btn-asset m-0" ng-show="removeflag" ng-click="deleteAddinfo(asset)">
+                    <i class="zmdi zmdi-delete"></i>
+                </div>
+            </div>
+            <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12 ">
+                <textarea type="text" class="txt-area" ng-keypress="onChangeOption(asset)" ng-model="asset.info" placeholder="Add your Custom Requirement here.."></textarea>
+                <div class="pl-20 p-0 col-sm-12 col-md-12 col-lg-12 p-0">
+                    <div ngf-drop ngf-change="uploadFiles(asset)" ngf-select ng-model="asset.documents" class="col-sm-12 col-xs-12 col-md-12 col-lg-12  m-b-20 m-t-20 pointer p-0 drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true">
+                        <div class="p20 col-sm-12 col-md-12 col-lg-12">
+                            <!-- <span class="glyphicon glyphicon-folder-open col-xs-6 col-sm-6 col-md-4 col-lg-4 f-20 font-BB text-right">             -->
+                            </span><span class="col-xs-6 col-sm-6 col-md-12 col-lg-12 p-0 t-a-c">Drop Files here or click to upload</span>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-t-10 t-a-c">
+                                <div class=" ">
+                                    <button class="fileUpload-browse btn btn-primary t-50-p"> + Browse</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ngf-no-file-drop class="col-md-6 pt10">File Drag/Drop is not supported for this browser</div>
+                    <div class="font-999 f-15" ng-show="fileuploadedFlag">Support File</div>
+                    <div class="p-0 col-xs-12 col-sm-12 col-md-6 col-lg-6" ng-repeat="document in asset.documents">
+                        <div class="uploded-border col-lg-12 p-0">
+                        <span title="remove" class="zmdi zmdi-close-circle zmdi-hc-fw pointer pull-right" ng-click="vm.removedownloadfile(asset)"></span>
+                            <div class="font-616161 h-50 p-10">
+                                <a href="{{document.fileFullPath}}" download><span class="zmdi zmdi-cloud-download zmdi-hc-fw col-xs-6 col-sm-3 col-md-4 col-lg-3 f-20 font1 p-10"></span></a>
+                                <div class="col-xs-6 col-sm-9 col-md-8 col-lg-9 p-0">
+                                    <div title="{{document.fileName}}">{{document.fileName | cut:true:20:'...'}}</div>
+                                    <div class="font-616161"> {{document.size}} KB</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="error-font p-10" ng-show="vm.invalidresumeformat">Invalid File format please upload Microsoft Word, PDF, Text files</div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-11 t-a-c">
+            <!--  ng-disabled="campaignid.status != 'CAMPAIGN_DRAFT'"-->
+                <button class="btn btn-blue p-15" ng-click="submitasset(asset)">Save Asset {{$index+1}}</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-md-offset-3 p-t-13p">
+        <button ng-click="prev()" class="btn btn-skills blue-btn" ng-disabled="prevflag"><i class="zmdi zmdi-chevron-left pr10"></i> Prev</button>
+        <button ng-click="next()" class="btn btn-skills blue-btn" ng-disabled="nextflag">Next <i class="zmdi zmdi-chevron-right p-l-10"></i></button>
+    </div>
+</div>
+<div class="col-xs-12 m-t-5p">
+    <hr>
+</div>
+<div class="modal-footer">
+</div>

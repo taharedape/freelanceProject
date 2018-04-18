@@ -1,0 +1,135 @@
+
+<div class="container content-center">
+    <div class="row">
+        <div class="col-md-12 b-white">
+            <h3 class="p-30">
+                Camp1{{CampaignName}} <br>
+                <span class="f-link">
+                    #21{{CampaignId}}
+                </span>
+
+            </h3>
+            <div class="col-md-12" ng-repeat="event in vm.events | limitTo: 1">
+                <div class="col-md-12">
+                    <input type="text" class="task-input col-md-5" ng-model="event.title">
+                    <button class="btn btn-white col-md-4 col-md-offset-6" ng-click="vm.saveTimeline()">Save</button>
+                </div>
+                <div class="col-md-3 m-b-20">
+                    <div class="pt20 pb10">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5  p0 task-date">
+                            <div ng-controller="DatepickerDemoCtrl" class="application-picker">
+                                <div class="pb10" ng-class="{ 'is-opened': opened2 == true }">
+                                    <div class="" ng-class="{ 'fg-toggled': opened2 == true }">
+                                        <div class="m-l-1-1-17-3">Start Date</div>
+                                        <div class="input-group border-gray">
+                                            <input type="text" ng-click="open($event, 'opened2')" is-open="opened2" class="form-control pl10" ng-change="vm.changeDatevalue(test)" datepicker-popup="dd/MM/yyyy" show-weeks="false" ng-model="event.startsAt" min-date="minDate" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                                            <label class="input-group-btn bg-white" for="date-fld" ng-click="open($event, 'opened2')" is-open="opened2">
+                                                <span class="btn btn-default bl0">
+                                                  <span class="glyphicon glyphicon-calendar"></span>
+                                              </span>
+                                          </label>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <uib-timepicker class="time-dropdown" ng-model="event.startsAt" hour-step="1" minute-step="15" show-meridian="true">
+                        <div>
+                        </div>
+                    </uib-timepicker>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="pt20 pb10">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5  p0 task-date">
+                        <div ng-controller="DatepickerDemoCtrl" class="application-picker">
+                            <div class="pb10" ng-class="{ 'is-opened': opened2 == true }">
+                                <div class="" ng-class="{ 'fg-toggled': opened2 == true }">
+                                    <div class="m-l-1-1-17-3">End Date</div>
+                                    <div class="input-group border-gray">
+                                        <input type="text" ng-click="open($event, 'opened2')" is-open="opened2" class="form-control pl10" ng-change="vm.changeDatevalue(test)" datepicker-popup="dd/MM/yyyy" show-weeks="false" ng-model="event.endsAt" min-date="event.startsAt" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                                        <label class="input-group-btn bg-white" for="date-fld" ng-click="open($event, 'opened2')" is-open="opened2">
+                                            <span class="btn btn-default bl0">
+                                               <span class="glyphicon glyphicon-calendar"></span>
+                                           </span>
+                                       </label>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                   <uib-timepicker class="time-dropdown" ng-model="event.endsAt" hour-step="1" minute-step="15" show-meridian="true">
+                   </uib-timepicker>
+               </div>
+           </div>
+       </div>
+       <div class="col-md-3 m-10">
+        <!-- <div class="btn-group"> -->
+            <span class="dateMonth" ng-bind="vm.todayDate|monthyear"></span>
+            <span class="btn glyphicon glyphicon-chevron-left pointer timeline-arrow-circle col-md-offset-3" mwl-date-modifier date="vm.viewDate" decrement="vm.calendarView">
+
+            </span>
+            <span class="btn glyphicon glyphicon-chevron-right pointer timeline-arrow-circle" mwl-date-modifier date="vm.viewDate" increment="vm.calendarView">
+
+            </span>
+            <!-- </div> -->
+        </div>
+        <br class="visible-xs visible-sm">
+        <div class="col-md-4 text-center m-10">
+            <div class="btn-group">
+                <label class="btn btn-primary cal-time" ng-model="vm.calendarView" uib-btn-radio="'year'">Year</label>
+                <label class="btn btn-primary cal-time" ng-model="vm.calendarView" uib-btn-radio="'month'">Month</label>
+                <label class="btn btn-primary cal-time" ng-model="vm.calendarView" uib-btn-radio="'week'">Week</label>
+                <label class="btn btn-primary cal-time" ng-model="vm.calendarView" uib-btn-radio="'day'">Day</label>
+                <button class="btn btn-primary cal-time" mwl-date-modifier date="vm.viewDate" set-to-today>Today</button>
+            </div>
+        </div>
+        <div class="hr-timeline col-md-12">
+            <hr>
+            <h3 class="col-md-offset-6">
+
+                {{ vm.calendarTitle }}
+            </h3>
+        </div>
+        <!--current date month/year-->
+        <div class="row ">
+            <div class="col-md-2 ">
+                <h3 ng-click="filter.show = !filter.show" class="pointer"><i
+                 ng-hide="filter.show"
+                 class="glyphicon glyphicon-chevron-down fa-3x f-12 margin-arrow"></i><i
+                 ng-show="filter.show" class="glyphicon glyphicon-chevron-up fa-3x f-12 margin-arrow"></i>Filters</h3>
+                 <div ng-if="filter.show">
+                    <input class="form-control" placeholder="Name of kreator">
+                    <h4>Availability</h4>
+                    <p class="input-group">
+                        <input class="form-control" date-disabled="disabled(date, mode)" uib-datepicker-popup="{{format}}" ng-model="dt.start" is-open="popup1.opened" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" placeholder="Start Date" disabled />
+                        <span class="input-group-btn">
+                          <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                      </span>
+                  </p>
+                  <uib-timepicker ng-model="startsAt" hour-step="1" minute-step="15" show-meridian="true">
+                  </uib-timepicker>
+                  <p class="input-group">
+                    <input type="text" class="form-control" date-disabled="disabled(date, mode)" uib-datepicker-popup="{{format}}" ng-model="dt.end" is-open="popup2.opened" disable-weekends="true" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" placeholder="End Date" disabled/>
+                    <span class="input-group-btn">
+                       <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+                   </span>
+               </p>
+               <uib-timepicker ng-model="endsAt" hour-step="1" minute-step="15" show-meridian="true">
+               </uib-timepicker>
+               <ui-select multiple tagging tagging-label="(custom 'new' label)" ng-model="selectedEvalSkillsets" theme="bootstrap" sortable="false" title="Select a skill" class="m-t-20">
+                <ui-select-match placeholder="Select skills...">
+                {{$item.testName}}</ui-select-match>
+                <ui-select-choices repeat="skillset in vm.skills | filter:$select.search" style="width:50%"> {{skillset.testName}} </ui-select-choices>
+            </ui-select>
+            <button class="btn b-r-5 w-50p h-37 b-blue f-white bold m-t-30" ng-click="vm.kreatorSearch();vm.showKreators=true">Apply</button>
+            <div class="kreator-list m-t-20" ng-repeat="k in vm.kreators" ng-if="vm.showKreators">{{k.title}}<span ng-click="assign = !assign"> <span class="btn assign-btn pointer" ng-if="assign" ng-click="vm.assignKreator(k)">Assign</span><span class="btn assign-btn pointer" ng-if="!assign" ng-click="vm.removeKreator(k)">Remove</span></span>
+            </div>
+        </div>
+    </div>
+    <mwl-calendar events="vm.events" view="vm.calendarView" view-title="vm.calendarTitle" view-date="vm.viewDate" on-event-click="vm.eventClicked(calendarEvent)" on-event-times-changed="vm.eventTimesChanged(calendarEvent); calendarEvent.startsAt = calendarNewEventStart; calendarEvent.endsAt = calendarNewEventEnd" edit-event-html="'<i class=\'glyphicon glyphicon-pencil\'></i>'" delete-event-html="'<i class=\'glyphicon glyphicon-remove\'></i>'" on-edit-event-click="vm.eventEdited(calendarEvent)" on-delete-event-click="vm.eventDeleted(calendarEvent)" cell-is-open="vm.isCellOpen" day-view-start="00.00" day-view-end="23.00" day-view-split="30" cell-modifier="vm.modifyCell(calendarCell)" class="col-md-10 m-b-100">
+    </mwl-calendar>
+</div>
+
+</div>
+</div>

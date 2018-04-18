@@ -1,0 +1,64 @@
+
+<div class="container content-center">
+    <div class="row">
+    <div class="col-md-12 card-body m-t-20">
+			<div class="card-header ch-alt b-blue">
+				<h2 class="f-white f-500">Campaigns Timeline</h2>
+			</div>
+			<div class="col-md-12 search-container ">
+				<div class=" col-md-2">
+					<div class="fg-line">
+						<input type="text" class=" b-r-3 klient-name"
+							placeholder="Campaign Name" ng-model="vm.searchCriteria.name">
+					</div>
+				</div>
+				<div class=" col-md-2">
+					<ui-select ng-model="vm.searchCriteria.klientType"
+						theme="selectize"> <ui-select-match>
+					<span>{{vm.searchCriteria.klientType}}</span> </ui-select-match> <ui-select-choices
+						repeat="klientType in vm.klientTypeList | filter: $select.search">
+					<span ng-bind-html="klientType | highlight: $select.search"></span>
+					</ui-select-choices> </ui-select>
+				</div>
+				<div class=" col-md-2">
+					<ui-select ng-model="vm.searchCriteria.status" theme="selectize">
+					<ui-select-match> <span>{{vm.searchCriteria.status}}</span>
+					</ui-select-match> <ui-select-choices
+						repeat="status in vm.campaignStatusList | filter: $select.search">
+					<span ng-bind-html="status | highlight: $select.search"></span> </ui-select-choices> </ui-select>
+				</div>
+				<div class=" col-md-2">
+					<ui-select ng-model="vm.searchCriteria.timePeriod"
+						theme="selectize"> <ui-select-match>
+					<span>{{vm.searchCriteria.timePeriod}}</span> </ui-select-match> <ui-select-choices
+						repeat="dateType in vm.dateTypeList | filter: $select.search">
+					<span ng-bind-html="dateType | highlight: $select.search"></span> </ui-select-choices>
+					</ui-select>
+				</div>
+				<div class=" col-md-2">
+					<button class="btn  b-r-5 w-50p h-37 b-blue f-white bold"
+						ng-click="vm.search()">Apply</button>
+				</div>
+			</div>
+            <div class="col-md-offset-3 m-5-1-2-38p" data-toggle="buttons">
+                <label class="btn btn-default" ng-class="{'btn-primary': scale==1}">
+                    <input id="scale1" name="scale" value="1" type="radio" data-ng-model="scale">Day scale
+                </label>
+                <label class="btn btn-default" ng-class="{'btn-primary':scale==2}">
+                    <input id="scale2" name="scale" value="2" type="radio" data-ng-model="scale">Week scale
+                </label>
+                <label class="btn btn-default" ng-class="{'btn-primary':scale==3}">
+                    <input id="scale3" name="scale" value="3" type="radio" data-ng-model="scale">Month scale
+                </label><br>
+            <button type="button" class="btn btn-primary col-md-offset-1 m-t-15 " ng-click="vm.toggleMode(this)"><span class="glyphicon glyphicon-zoom-in"></span>  Zoom to Fit</button>
+            </div>
+      
+            <div id="gantt_here" style='width:100%; height:600px;'></div>
+            <button class="btn btn-primary col-md-offset-5 m-t-20" value="Export to PDF" type="button" onclick='gantt.exportToPDF()'>Export PDF</button>
+            <button class="btn btn-primary m-t-20" value="Export to PNG" type="button" onclick='gantt.exportToPNG()'>Export Image</button>
+            <!-- <input value="Export :: Meadow" type="button" onclick='gantt.exportToPNG({ skin:"meadow" })' style='margin:20px;'> -->
+            <!-- <input value="Export :: Broadway" type="button" onclick='gantt.exportToPDF({ skin:"broadway" })' style='margin:20px;'> -->
+            <!-- <input value="Export :: Skyblue" type="button" onclick='gantt.exportToPDF({ skin:"skyblue" })' style='margin:20px;'> -->
+        </div>
+    </div>
+    <!-- <div id="calendar" data-calendar data-action-links="vm.actionMenu" data-select="onSelect(start, end)"></div> -->

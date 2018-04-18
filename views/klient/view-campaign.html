@@ -1,0 +1,505 @@
+<div class="">
+    <div class="modal-content col-md-12">
+        <div class="modal-header">
+            <h4 class="f-gray t-capitalize">Campaign Name : {{vm.campaign.campaignName}}</h4>
+            <h4 class="f-gray">Campaign Id : {{vm.campaign.campaignId}}</h4>
+            <!--Campaign ID-->
+        </div>
+        <uib-tabset justified="false">
+            <uib-tab heading="Breif" active="true" class=" tabCampaign">
+                <!-- <div class="col-md-9 col-xs-12 col-md-offset-3">
+                  <button class="btn lightGrey b-r-20 col-md-offset-7"> <span class="darkGrey">Delete</span></button><button class="btn lightGrey b-r-20"><span class="darkGrey">Save</span></button>
+
+                </div> -->
+                <div class="col-md-12 col-xs-6 small">
+                    <form class="" name="basicInfo">
+                        <!-- data-ng-if="pctrl.editInfo === 1" -->
+                        <div class="col-md-5 m-t-15 ">
+                            <span class="f-16">Klient Name</span><span class="col-md-offset-3 f-18 f-blue">{{vm.campaign.companyBranch.company.companyName + '(' +vm.campaign.companyBranch.branchName+')'}}</span>
+                        </div>
+                        <div class="col-md-5 m-t-15 col-md-offset-1">
+                            <span class="f-16">Total Kredits</span><span class="col-md-offset-3 f-40 l-h-0">{{vm.campaign.totalKredits}}</span>
+                            <span class="f-blue f-18">Kredits</span>
+                        </div>
+                        <div class="col-md-5 m-t-15 ">
+                            <span class="f-16">Campaign Name</span><span class="col-md-offset-3 f-16 f-blue">{{vm.campaign.campaignName}}</span>
+                        </div>
+                        <div class="col-md-5 m-t-15 col-md-offset-1">
+                            <span class="f-16">Created By</span><span class="col-md-offset-3 f-16 f-blue">{{vm.campaign.createdBy}}</span>
+                        </div>
+                        <div class="col-md-5 m-t-15 ">
+                            <span class="f-16">Status</span><span class="col-md-offset-3 f-18 ">{{vm.campaign.status}}</span>
+                        </div>
+                        <div class="col-md-5 m-t-15 col-md-offset-1">
+                            <span class="f-16">Last Updated</span><span class="col-md-offset-3 f-16">{{vm.campaign.modifiedDate}}</span>
+                        </div>
+                    </form>
+                    <div class="col-xs-12 m-t-5p">
+                        <hr>
+                    </div>
+                    <div ng-repeat="campBrfs in vm.campaign.campaignBriefs">
+                        <span class="col-md-1 f-green" ng-if="campBrfs.show"><hr
+                        class="hr"></span> <span class="col-md-1" ng-if="!campBrfs.show"><hr
+                        class="hr"></span>
+                    </div>
+                </div>
+                <div class="col-md-12 " ng-repeat="campBrfs in vm.campaign.campaignBriefs" ng-if="campBrfs.show">
+                    <p>{{campBrfs.campaignBriefQuestion.question}}</p>
+                    <form action="#">
+                        <div class="form-group brief">
+                            <div class="fg-line">
+                                <textarea class="form-control" ng-model="campBrfs.answer" ng-blur="vm.updateBrief($index)" style="overflow: hidden; word-wrap: break-word; height: 93px;"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-3 col-md-offset-4 m-b-20">
+                    <button class="btn b-light-blue f-white b-r-15" ng-click="vm.previousQst()" ng-disabled="vm.prev">previous</button>
+                    <button class="btn b-dark-blue  f-white b-r-15" ng-click="vm.nextQst()" ng-disabled="vm.next">next</button>
+                </div>
+            </uib-tab>
+            <uib-tab heading="Suport Materials" class="tabCampaign">
+                <div class="col-md-12 col-xs-12">
+                    <span class="dwl-file col-md-3" ng-repeat="document in vm.campaign.documents"> <i
+                class="zmdi zmdi-download btn-dwl-i static"></i> <a target="_self"
+                href="{{document.downloadUrl}}" download="{{document.downloadUrl}}">
+                    <span class="blue f-15 m-l-7">{{document.fileName|
+                        cut:true:15:'...'}}</span>
+                    <div class="blue f-15 m-l-7">{{document.modifiedDate| datetime}}
+                    </div>
+                    </a>
+                    </span>
+                    <div ngf-drop ngf-select ng-model="vm.bufferDocs" class="drop-box col-md-12 m-b-20 m-t-20 pointer" ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true" accept="image/*,application/pdf" ngf-pattern="'image/*,application/pdf'">Drop pdfs or images here or click to upload</div>
+                    <div ngf-no-file-drop class="col-md-6">File Drag/Drop is not supported for this browser</div>
+                    <ul class="col-md-6" ng-if="vm.bufferDocs.length > 0">
+                        Files:
+                        <li style="font: smaller" ng-repeat="buffDoc in vm.bufferDocs">{{buffDoc.name}} ::
+                            <button ng-click="vm.uploadFile(buffDoc)">Upload</button>
+                        </li>
+                    </ul>
+                </div>
+            </uib-tab>
+            <uib-tab heading="Assets" class="tabCampaign">
+                <div class=" col-md-12">
+                    <div class="col-md-12 m-t-20 brief-leftbar-wrapper">
+                        <div class="team-row">
+                            <div class="col-md-4 team-cam-search">
+                                <select data-placeholder="Select category" class=" ui dropdown btn input-border" ng-model="vm.selectedAssetGroup" ng-change="vm.selectedAssetSubGroup.assets = {}" ng-options="c.name group by c.group for c in vm.assetGroups">
+                                    <option value="">Select category</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 team-cam-search">
+                                <select placeholder="Select sub category" class=" ui dropdown btn input-border" ng-model="vm.selectedAssetSubGroup" ng-change="vm.showAssets()" ng-options="c.name group by c.group for c in vm.selectedAssetGroup.assetSubGroups">
+                                    <option value="">Select sub category</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <h4>
+                            Total: <span class="f-40 l-h-0">{{vm.campaign.totalKredits}}</span>
+                            <span class="f-blue">Kredits</span>
+                        </h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-6 text-center" ng-repeat="asset in vm.selectedAssetSubGroup.assets">
+                            <div class="team-profile-item col-md-12 m-t-20">
+                                <!--  <p>{{asset.name}}</p> -->
+                                <a class="ci-avatar"> <img class=" img-responsive" src="img/asset.PNG" alt="team member" ng-click="vm.addAsset(asset)"></a>
+                                <div class="team-info p-10">
+                                    <span class="team-project-name">{{asset.name}}</span>
+                                    <br> <strong class="f-blue">{{asset.kredits}} Kredits</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--- Right bar starts here -->
+                </div>
+                <div class="row">
+                    <div class="col-md-12 card-body m-t-20">
+                        <div class="card-header ch-alt b-blue">
+                            <h2 class="f-white">Asset Kredit</h2>
+                            <ul class="actions">
+                                <li>
+                                    <a href="" tooltip-placement="top" uib-tooltip="Delete" ng-click="vm.removeAsset()"> <i class="zmdi zmdi-delete f-white"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="w-25" sortable="false" style="background: none">
+                                        <label class="checkbox checkbox-inline">
+                                            <input type="checkbox" ng-change="vm.selectAll()" ng-model="vm.campaign.allSelected"> <i class="input-helper"></i>
+                                        </label>
+                                    </th>
+                                    <th>Asset name</th>
+                                    <th>Kredit</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="campaignAsset in vm.campaign.campaignAssets">
+                                    <td>
+                                        <label class="checkbox checkbox-inline">
+                                            <input type="checkbox" ng-model="campaignAsset.selected"> <i class="input-helper"></i>
+                                        </label>
+                                    </td>
+                                    <td title="{{campaignAsset.asset.name}}">{{campaignAsset.asset.name| cut:true:7:'...'}}
+                                    </td>
+                                    <td>{{campaignAsset.eachAssetKredits}}</td>
+                                    <td>
+                                        <button class="btn counter-minus" ng-click="vm.subtractQty(campaignAsset)">-</button>
+                                        <input type="text" valid-number class="counter-field-asset" ng-model="campaignAsset.assetQuantity" ng-disabled="true">
+                                        <button class="btn counter-plus" ng-click="vm.addQty(campaignAsset)">+</button>
+                                    </td>
+                                    <td>{{campaignAsset.totalKredits}}</td>
+                                    <td class="text-right"><a ng-click="vm.addInfo(campaignAsset)" class="btn b-blue f-white pointer">Add Info</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="col-md-5 col-md-offset-4 b-r-5 m-b-20 m-t-20">
+                            <button class="btn b-blue f-white l-h-34" ng-click="vm.updateAssets()">Update Assets</button>
+                        </div>
+                    </div>
+                </div>
+            </uib-tab>
+            <uib-tab heading="Task" class="tabCampaign">
+                <div class="row">
+                    <div class="col-md-12 card-body m-t-20">
+                        <div class="card-header ch-alt b-blue">
+                            <h2 class="f-white">Tasks</h2>
+                            <ul class="actions">
+                                <li>
+                                    <a href="" tooltip-placement="top" uib-tooltip="Delete" ng-click="vm.removeTask(task)"> <i class="zmdi zmdi-delete f-white"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <table datatable="ng" id="myTable" dt-options="vm.dtOptions" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="w-25" sortable="false" style="background: none">
+                                        <label class="checkbox checkbox-inline">
+                                            <input type="checkbox" ng-change="vm.toggleAll()" ng-model="vm.isAllSelected"> <i class="input-helper"></i>
+                                        </label>
+                                    </th>
+                                    <th class="t-normal" colspan="1"></th>
+                                    <th class="t-normal">ID</th>
+                                    <th class="t-normal">Name</th>
+                                    <th class="t-normal">Start Date</th>
+                                    <th class="t-normal">End Date</th>
+                                    <th class="t-normal">Kreator</th>
+                                    <th class="t-normal" ng-show="">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="u in users | filter:vm.filter" ng-click="showDetail(u.user)" ng-class-odd="'alt'" ng-init="u.show=false">
+                                    <td ng-hide="u.show">
+                                        <label class=" checkbox checkbox-inline">
+                                            <input type="checkbox" ng-model="temp.selected" ng-change="vm.optionToggled(temp)"> <i class="input-helper"></i>
+                                        </label>
+                                    </td>
+                                    <td class="col-xs-2 " title="View Permissions"><a href="" ng-click="vm.add();u.show=true"><i
+                                    class="glyphicon glyphicon-plus fa-3x"></i></a> <span class="col-xs-2 m-l-16p" ng-click="u.show = !u.show" title="View Permissions"><a href=""><i
+                                        ng-hide="u.show"
+                                        class="glyphicon glyphicon-chevron-down fa-3x"></i><i
+                                        ng-show="u.show" class="glyphicon glyphicon-chevron-up fa-3x"></i></a></span>
+                                    </td>
+                                    <td class="col-xs-2" ng-hide="u.show">{{ temp.id }}123</td>
+                                    <td class="col-xs-2 text-center t-a-l" ng-hide="u.show"><img title="{{u.user.name.first}}" src="{{u.user.picture}}" class="img-thumbnail img-responsive img-circle w-20">{{u.user.name.first | filter:name}}</td>
+                                    <td class="col-xs-2" ng-hide="u.show">{{StartDate}}22/jan/2014</td>
+                                    <td class="col-xs-2" ng-hide="u.show">{{EndDate}}22/jan/2015</td>
+                                    <td class="col-xs-2" ng-hide="u.show">{{Kreator}}Capitan Ravi
+                                    </td>
+                                    <td class="child" colspan="6" ng-show="u.show">
+                                        <div class="row m-t-20 m-b-20">
+                                            <div ng-repeat="item in items">
+                                                <div class="col-md-2">
+                                                    <label class=" checkbox checkbox-inline">
+                                                        <input type="checkbox" ng-model="temp.selected" ng-change="vm.optionToggled(temp)"> <i class="input-helper"></i>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-1">{{ id }}#124</div>
+                                                <div class="col-md-2">
+                                                    <div class="fg-line">
+                                                        <input type="text" class="form-control" name="firstName" placeholder="{{item.questionPlaceholder}}" ng-model="item.question">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="fg-line">
+                                                        <input type="text" class="form-control" name="firstName" placeholder="{{item.questionPlaceholder}}" ng-model="item.question">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="fg-line">
+                                                        <input type="text" class="form-control" name="firstName" placeholder="{{item.questionPlaceholder}}" ng-model="item.question">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="fg-line">
+                                                        <input type="text" class="form-control" name="firstName" placeholder="{{item.questionPlaceholder}}" ng-model="item.question">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="col-md-2">
+                                                <button class="btn b-dark-blue f-white b-r-15">Save</button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </uib-tab>
+            <uib-tab heading="Members" class="tabCampaign">
+                <div class=" col-md-12">
+                    <h4 class="m-l-2p f-gray">Add Memeber</h4>
+                    <ui-select class="col-md-11" ng-model="vm.campaignUser" theme="selectize">
+                        <ui-select-match> <span>{{vm.campaignUser.firstName}}&nbsp;{{vm.campaignUser.lastName}}</span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="user in vm.campaign.companyBranch.users | filter: $select.search">
+                            <span ng-bind-html="user.firstName | highlight: $select.search"></span>
+                            <span ng-bind-html="user.lastName | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                    <!--        <button class="btn col-md-1 l-h-19 f-s-20 m-l-3m"
+                ng-click="vm.showPermissions=true">
+                <i class="glyphicon glyphicon-plus"></i>
+            </button> -->
+                    <div class="m-l-2p " ng-if="vm.campaignUser">
+                        <h4 class="f-gray m-t-30 m-b-20">Permissions</h4>
+                        <div class="checkbox col-md-3 m-b-20" ng-repeat="perm in vm.campaign.permissionList">
+                            <label>{{perm.permissionName}}
+                                <input type="checkbox" ng-model="perm.selected"> <i class="input-helper"></i>
+                            </label>
+                        </div>
+                        <button class="btn b-light-gray f-white b-r-15 col-md-offset-4" ng-click="vm.clearCampaignUser()">Cancel</button>
+                        <button class="btn b-dark-blue  f-white b-r-15" ng-click="vm.addCampaignUser()">Add</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 card-body m-t-20">
+                        <div class="card-header ch-alt b-blue">
+                            <h2 class="f-white">Members</h2>
+                            <ul class="actions">
+                                <li>
+                                    <a href="" tooltip-placement="top" uib-tooltip="Delete" ng-click="vm.removeMembers()"> <i class="zmdi zmdi-delete f-white"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <table datatable="ng" id="myTable" dt-options="vm.dtOptions" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="w-25" sortable="false" style="background: none">
+                                        <label class="checkbox checkbox-inline">
+                                            <input type="checkbox" ng-change="vm.selectAllUserPerms()" ng-model="vm.campaign.userPemAllSelected"> <i class="input-helper"></i>
+                                        </label>
+                                    </th>
+                                    <th class="t-normal">ID</th>
+                                    <th class="t-normal">Name</th>
+                                    <th class="t-normal">Role</th>
+                                    <th class="t-normal">Group</th>
+                                    <th class="t-normal" ng-show="">Date</th>
+                                    <th class="t-normal">View</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="userCampaign in vm.campaign.userCampaigns | filter:vm.filter" ng-class-odd="'alt'">
+                                    <td>
+                                        <label class=" checkbox checkbox-inline">
+                                            <input type="checkbox" ng-model="userCampaign.selected"> <i class="input-helper"></i>
+                                        </label>
+                                    </td>
+                                    <td>{{ userCampaign.user.id }}</td>
+                                    <td><img src="{{userCampaign.user.picture}}" class="img-thumbnail img-responsive img-circle w-20">{{userCampaign.user.firstName}}</td>
+                                    <td ng-hide="u.show">{{userCampaign.user.userRole.role}}</td>
+                                    <td ng-hide="u.show">{{userCampaign.user.userGroup.groupName}}</td>
+                                    <td class="child" colspan="2" ng-show="u.show">
+                                        <div class="row  m-t-20 m-b-20">
+                                            <h4 class="f-gray t-a-c">Permissions</h4>
+                                            <div class="checkbox col-md-2 col-md-offset-2" ng-repeat="ucp in userCampaign.userCampaignPermissions">
+                                                <label>{{ucp.campaignPermission.permissionName}}
+                                                    <input type="checkbox" checked> <i class="input-helper"></i>
+                                                </label>
+                                            </div>
+                                            <br>
+                                        </div>
+                                        <!-- <button class="btn b-dark-blue  f-white b-r-15 col-md-3" ng-click="vm.updateUserCampaignPerms(userCampaign)">Save</button> -->
+                                    </td>
+                                    <td ng-click="u.show = !u.show" title="View Permissions"><a href=""><i ng-hide="u.show"
+                                    class="glyphicon glyphicon-plus"></i><i ng-show="u.show"
+                                    class="glyphicon glyphicon-minus"></i></a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </uib-tab>
+            <uib-tab heading="Deliverables" class="tabCampaign">
+                <div class="col-md-12 card-body">
+                    <div class="card-header ch-alt b-gray p-0">
+                        <nav class="navbar navbar-light m-b-0">
+                            <ul class="nav navbar-nav">
+                                <li class="nav-item active"><a class="nav-link f-white t-uppercase" href="" ng-click="vm.task=true">Kreator's Tasks</a></li>
+                                <li class="nav-item"><a class="nav-link f-white t-uppercase" href="" ng-click="vm.task=false">Klient's feedback</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <!-- task -->
+                    <div ng-show="vm.task">Tasks here</div>
+                    <!-- feedback -->
+                    <div ng-hide="vm.task">feedback here</div>
+                </div>
+            </uib-tab>
+            <uib-tab heading="Quotation" class="tabCampaign">
+                <div class="col-md-12">
+                    <div>
+                        <div>
+                            <div class="col-md-12 text-left">
+                                <h4 class="modal-title f-25 f-300">Quotation</h4>
+                                <span>{{vm.campaign.campaignId}}</span>
+                                <div class="m-t-10 m-b-10"><img src="img/....png" class="w-60" alt="... img"></div>
+                            </div>
+                            <div class="col-md-8 text-left">
+                                
+                                <div>
+                                    <h6>To</h6></div>
+                                <div class="t-capitalize"><b>{{vm.company.companyName}}</b></div>
+                                <address>
+                                    {{vm.branchAddress.address1}},
+                                    <br> {{vm.branchAddress.address2}},
+                                    <br> {{vm.branchAddress.postalCode}} {{vm.branchAddress.city}},
+                                    <br> {{vm.branchAddress.state}} {{vm.branchAddress.country}}
+                                </address>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="col-md-12 m-b-7">
+                                    <div class="col-md-6 text-right l-h-30">Issued Date: </div>
+                                    <div class="col-md-6 text-left">
+                                        <span class="width200 l-h-30" ng-if="vm.transaction">{{vm.transaction.createdDate | dateonly}}</span>
+                                        <span class="width200 l-h-30" ng-if="!vm.transaction">{{vm.order.createdDate | dateonly}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 m-b-7">
+                                    <div class="col-md-6 text-right l-h-40">Currency </div>
+                                    <div class="col-md-6 text-left">
+                                        <ui-select ng-model="vm.companyBranch.tempCurrency" theme="selectize">
+                                            <ui-select-match> <span>{{vm.companyBranch.tempCurrency}}</span></ui-select-match>
+                                            <ui-select-choices repeat="currency in vm.currencyList| filter: $select.search">
+                                                <span ng-bind-html="currency | highlight: $select.search"></span>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 m-b-7">
+                                    <div class="col-md-6 text-right l-h-30">GST ID: </div>
+                                    <div class="col-md-6 text-left l-h-30">{{invoiceresponse.quotation.gst}}</div>
+                                </div>
+                                <div class="col-md-12 m-b-7">
+                                    <div class="col-md-6 text-right l-h-30">Tax: </div>
+                                    <div class="col-md-6 text-left l-h-30">{{invoiceresponse.quotation.tax}}%</div>
+                                </div>
+                                <div class="col-md-12 m-b-7">
+                                    <div class="col-md-6 text-right l-h-30">Status: </div>
+                                    <div class="col-md-6 text-left">
+                                        <span class="f-green l-h-30" ng-show="vm.order.orderStatus == 'ORDER_COMPLETED'">Completed</span>
+                                        <span class="f-red l-h-30" ng-show="vm.order.orderStatus != 'ORDER_COMPLETED'">Failed</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="col-md-12 card-body p-0">
+                                <div class="card-header b-blue">
+                                    <h2 class="f-white f-500 t-uppercase">Item List</h2>
+                                </div>
+                            </div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="t-normal">Description</th>
+                                        <th class="t-normal text-center">Amount (USD)</th>
+                                        <th class="t-normal text-center">Quantity</th>
+                                        <th class="t-normal text-center">Sub Total (USD)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="4" class="b-gray f-white t-capitalize">{{vm.campaign.campaignName}}</td>
+                                    </tr>
+                                    <!-- <tr>
+                                        <td colspan="4" class="b-lighter-gray">New Year Promotion</td>
+                                    </tr> -->
+                                    <!--   <tr ng-repeat="campaignAsset in vm.campaign.campaignAssets">
+                                        <td class="t-capitalize" title="{{campaignAsset.asset.name}}">{{campaignAsset.asset.name| cut:true:7:'...'}}</td>
+                                        <td class="text-center"><input class="w-25p text-center" type="text" ng-model="campaignAsset.eachAssetKredits" ng-change="vm.assetcreditchage(campaignAsset.eachAssetKredits)"></td>
+                                        <td class="text-center"><input class="w-25p text-center quotation-input" type="text" ng-model="campaignAsset.assetQuantity" disabled="true"></td>
+                                        <td class="text-center f-700">{{campaignAsset.totalKredits}}</td>
+                                    </tr> -->
+                                    <tr ng-repeat="campaignAsset in vm.campaign.campaignAssets">
+                                        <td class="t-capitalize" title="{{campaignAsset.asset.name}}">{{campaignAsset.asset.name| cut:true:7:'...'}}</td>
+                                        <td class="text-center">
+                                            <input class="w-25p text-center" type="text" ng-model="campaignAsset.eachAssetKredits" ng-change="vm.assetcreditchage(campaignAsset.eachAssetKredits)">
+                                        </td>
+                                        <td class="text-center">
+                                            <input class="w-25p text-center quotation-input" type="text" ng-model="campaignAsset.assetQuantity" disabled="true">
+                                        </td>
+                                        <td class="text-center f-700">{{campaignAsset.totalKredits}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td class="f-700 text-center">Discount {{ vm.order.tax }}%</td>
+                                        <td class="f-700 text-center">{{ vm.order.totalTaxAmount | currency:value=vm.order.currencyType + ' ' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td class="f-700 text-center">Tax {{ vm.order.tax }}%</td>
+                                        <td class="f-700 text-center">{{ vm.order.totalTaxAmount | currency:value=vm.order.currencyType + ' ' }}</td>
+                                    </tr>
+                                    <!-- <tr ng-repeat="package in vm.order.orderPackages">
+                                        <td>{{ package.kreditPackage.kreditValue }}</td>
+                                        <td>{{ package.quantity }}</td>
+                                        <td>{{ package.kreditPackage.kredits }}</td>
+                                        <td>{{ package.totalAmount | currency:value=package.kreditPackage.currencyType + ' ' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td class="f-700">Tax {{ vm.order.tax }}%</td>
+                                        <td class="f-700">{{ vm.order.totalTaxAmount | currency:value=vm.order.currencyType + ' ' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td class="f-700">Total</td>
+                                        <td class="f-700">USD {{ vm.order.totalAmount | currency:value=package.kreditPackage.currencyType + ' ' }}</td>
+                                    </tr> -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-12 text-right">
+                                <span class="f-18 f-700 t-uppercase">Total= </span>
+                                <span class="f-40 f-700">{{vm.totalasset}}</span>
+                                <span class="f-14 f-700 f-blue">{{vm.companyBranch.tempCurrency}}</span>
+                            </div>
+                            <div class=" col-md-12 text-right m-t-30 m-b-30">
+                                <button class="btn-blue b-dark-blue t-uppercase f-16">Send Quotation</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+</div>
+<!-- <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="vm.joinMember()">OK</button>
+    <button class="btn btn-danger" ng-click="vm.dismiss()">Cancel</button>
+</div> -->

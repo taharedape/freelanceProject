@@ -1,0 +1,85 @@
+<div class="modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button class="close f-25" ng-click="vm.cancel()">×</button>
+            <h4 class="modal-title text-left f-300">Create New User</h4>
+        </div>
+        <div class="modal-body ng-scope">
+            <h5>Settings</h5>
+            <div class="m-t-15">
+                <form name="klientAddUserForm" ng-submit="vm.createUser()">
+                    <div class="col-md-6 p-0">
+                        <div class="form-group">
+                            <label for="department-name">First Name</label>
+                            <input type="text" name="klientUserFirstName" class="form-control input-border p-l-10" ng-model="vm.user.firstName" required ng-minlength="3">
+                            <span ng-show="klientAddUserForm.$submitted || klientAddUserForm.klientUserFirstName.$touched" class="f-red">
+		                        <small class="p-absolute" ng-show="klientAddUserForm.klientUserFirstName.$error.required">Enter first name</small>
+		                        <small class="p-absolute" ng-show="klientAddUserForm.klientUserFirstName.$error.minlength">Name too short</small>
+		                    </span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 p-r-0">
+                        <div class="form-group">
+                            <label for="new-department-description">Last Name</label>
+                            <input type="text" name="klientUserLastName" class="form-control input-border p-l-10" ng-model="vm.user.lastName" required ng-minlength="3">
+                            <span ng-show="klientAddUserForm.$submitted || klientAddUserForm.klientUserLastName.$touched" class="f-red">
+		                        <small class="p-absolute" ng-show="klientAddUserForm.klientUserLastName.$error.required">Enter first name</small>
+		                        <small class="p-absolute" ng-show="klientAddUserForm.klientUserLastName.$error.minlength">Name too short</small>
+		                    </span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 p-0">
+                        <div class="form-group">
+                            <label for="new-department-description">Email</label>
+                            <input type="text" name="addUserEmail" class="form-control input-border p-l-10" ng-model="vm.user.personalEmailId" required>
+                            <span ng-show="klientAddUserForm.$submitted || klientAddUserForm.addUserEmail.$touched" class="f-red">
+		                        <small class="p-absolute" ng-show="klientAddUserForm.addUserEmail.$error.required">Enter email</small> 
+		                        <small class="p-absolute" ng-show="klientAddUserForm.addUserEmail.$error.email">Enter valid email</small>
+		                    </span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 p-r-0">
+                        <div class="form-group">
+                            <label for="new-department-description">Department</label>
+                            <ui-select name="klientAddUserDepartment" ng-model="vm.user.userGroup" theme="selectize" required>
+                                <ui-select-match> <span>{{vm.user.userGroup.groupName}}</span>
+                                </ui-select-match>
+                                <ui-select-choices repeat="userGroup in vm.companyBranch.userGroups | filter: $select.search">
+                                    <span ng-bind-html="userGroup.groupName | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                            <span ng-show="klientAddUserForm.$submitted || klientAddUserForm.klientAddUserDepartment.$touched" class="f-red">
+		                        <small class="p-absolute" ng-show="klientAddUserForm.klientAddUserDepartment.$error.required">Select department</small>
+		                    </span>
+                        </div>
+                    </div>
+                    <div class="m-t-15">
+                        <div>
+                            <div class="p-0">
+                                <div class="form-group">
+                                    <label for="new-department-description">Role</label>
+                                    <ui-select name="klientAddUserRole" ng-model="vm.user.userRole" theme="selectize" required>
+                                        <ui-select-match> <span>{{vm.user.userRole.role}}</span>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="userRole in vm.companyBranch.userRoles | filter: $select.search">
+                                            <span ng-bind-html="userRole.role | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <span ng-show="klientAddUserForm.$submitted || klientAddUserForm.klientAddUserRole.$touched" class="f-red">
+				                        <small class="p-absolute" ng-show="klientAddUserForm.klientAddUserRole.$error.required">Select role</small>
+				                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="m-t-20 text-right">
+                <button class="btn-modal-cancel waves-effect m-r-10" ng-click="vm.cancel()">Cancel</button>
+                <button type="submit" class="btn-modal waves-effect" ng-disabled="!klientAddUserForm.$valid" ng-click="vm.createUser()">Create</button>
+            </div>
+        </div>
+    </div>
+</div>

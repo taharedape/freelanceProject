@@ -1,0 +1,685 @@
+<div class="container">
+    <div class="row ">
+        <div class="header col-xs-10 col-sm-10 col-md-10 col-lg-10" ng-class="{'w-100p':vm.klient}">
+            <div class="col-md-12">
+                <h4 class="f-link pull-left f-30 t-capitalize">{{vm.campaign.campaignName}}</h4>
+            </div>
+            <div class="f-blue col-md-12 f-17">#{{vm.campaign.campaignId}}
+                <span class="col-md-offset-12" ng-class="{'col-md-offset-11':vm.klient}">
+                    <a class="pointer" ng-click="vm.viewCampaignTimeline(vm.campaign)" tooltip-placement="top" uib-tooltip="Timeline"> <i class="zmdi zmdi-trending-up f-black timer"></i>
+                    </a>
+                </span>
+            </div>
+        </div>
+        <div class="col-xs-9 col-sm-9 col-md-11 col-lg-11 b-white m-t-10 m-h-650" ng-class="{'w-97p':vm.klient}">
+            <uib-tabset justified="false">
+                <uib-tab heading="Brief" active="true" class=" tabCampaign">
+                    <!-- <div class="col-md-9 col-xs-12 col-md-offset-3">
+                  <button class="btn lightGrey b-r-20 col-md-offset-7"> <span class="darkGrey">Delete</span></button><button class="btn lightGrey b-r-20"><span class="darkGrey">Save</span></button>
+
+                </div> -->
+                    <div class="col-lg-12  col-md-12 col-sm-12 col-xs-12  p20 p-t-0">
+                        <div class="col-lg-12  col-md-12 col-sm-12 col-xs-12  p-10 p-b-20">
+                            <div class="pull-right">
+                                <button class="btn btn-skills" ng-click="vm.updateCampaignBrief()" ng-disabled="(vm.campaign.status == 'CAMPAIGN_QUOTATION_REJECTED'||vm.campaign.status == 'CAMPAIGN_QUOTATION_APPROVED'||vm.campaign.status == 'CAMPAIGN_DRAFT' || vm.campaign.status == 'CAMPAIGN_BRIEF_REJECTED' || vm.campaign.status == 'CAMPAIGN_SUBMITTED') ?  false : true">SAVE</button>
+                                <button class="btn btn-skills blue-btn" ng-click="vm.closeCampaign(vm.campaign)" data-ng-if="vm.campaign.status =='CAMPAIGN_INPROGRESS'">Close campaign</button>
+                            </div>
+                        </div>
+                        <div class="col-lg-12  col-md-12 col-sm-12 col-xs-12  p-t-10 p-10 p-b-0 p-0">
+                            <div class="col-lg-3 p-b-10 col-md-6 col-sm-12 col-xs-12 profile-label ">Klient Name</div>
+                            <div class="col-lg-3 p-b-10 col-md-6 col-sm-12 col-xs-12 f-blue f-19 ">{{vm.campaign.companyBranch.company.companyName + ' (' +vm.campaign.companyBranch.branchName+')'}}</div>
+                            <div class="col-lg-3 p-b-10 col-md-6 col-sm-12 col-xs-12 profile-label ">Total Kredits</div>
+                            <div class="col-lg-3 p-b-10 col-md-6 col-sm-12 col-xs-12 "><span class="f-40 f-600 l-h-0">{{vm.campaign.totalKredits}}</span><span class="f-blue f-15"> Kredits</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-12  col-md-12 col-sm-12 col-xs-12 p-t-10 p-10 p-b-0 p-0">
+                            <div class="col-lg-3 p-b-10 col-md-6 col-sm-12 col-xs-12 profile-label ">Campaign Name</div>
+                            <div class="col-lg-3 p-b-10 col-md-6 col-sm-12 col-xs-12">
+                                <span ng-bind="vm.campaign.campaignName" class="f-19 w-100p"></span>
+                            </div>
+                            <div class="col-lg-3 p-b-10 col-md-6 col-sm-12 col-xs-12 profile-label">Start Date</div>
+                            <div class="col-lg-3 p-b-10 col-md-6 col-sm-12 col-xs-12 f-19">
+                                <span ng-if="vm.campaign.startTime">{{vm.campaign.startTime | datetime}}</span>
+                                <span ng-if="!vm.campaign.startTime">Not set</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-12  col-md-12 col-sm-12 col-xs-12  p-t-10 p-10 p-b-0 p-0">
+                            <div class="col-lg-3 p-b-10 col-md-6 col-sm-12 col-xs-12 profile-label ">Status</div>
+                            <div class="col-lg-3  p-b-10 col-md-6 col-sm-12 col-xs-12 p-0">
+                                <div class="col-xs-12 col-sm-10 col-md-10  m-b-0 m-t-10 b-white " ng-if="vm.campaign.status =='CAMPAIGN_DRAFT'"><span class="b-gray campaign-status">DRAFT</span>
+                                </div>
+                                <div class=" col-xs-10 col-sm-10 col-md-10  m-b-0 m-t-10 b-white " data-ng-if="vm.campaign.status =='CAMPAIGN_IN_BUCKET'"><span class="b-gray campaign-status">IN BUCKET</span>
+                                </div>
+                                <div class="col-xs-10 col-sm-10 col-md-10  m-b-0 m-t-10 b-white " data-ng-if="vm.campaign.status =='CAMPAIGN_SUBMITTED'"><span class="b-blue campaign-status">SUBMITTED</span>
+                                </div>
+                                <div class="col-xs-10 col-sm-10 col-md-10  m-b-0 m-t-10 b-white p-0" data-ng-if="vm.campaign.status =='CAMPAIGN_INPROGRESS'"><span class="b-orange campaign-status">IN PROGRESS</span>
+                                </div>
+                                <div class="col-xs-10 col-sm-10 col-md-10  m-b-0 m-t-10 b-white " data-ng-if="vm.campaign.status =='CAMPAIGN_FEEDBACK'"><span class="b-dark-blue campaign-status">FEEDBACK</span>
+                                </div>
+                                <div class="col-xs-10 col-sm-10 col-md-10  m-b-0 m-t-10 b-white " data-ng-if="vm.campaign.status =='CAMPAIGN_DONE'"><span class="b-green campaign-status">DONE</span>
+                                </div>
+                                <div class="col-xs-10 col-sm-10 col-md-10  m-b-0 m-t-10 b-white " data-ng-if="vm.campaign.status =='CAMPAIGN_QUOTATION_APPROVED'"><span class="b-green campaign-status">QUOTATION APPROVED</span>
+                                </div>
+                                <div class="col-xs-10 col-sm-10 col-md-10  m-b-0 m-t-10 b-white " data-ng-if="vm.campaign.status =='CAMPAIGN_TIMELINE'"><span class="b-dark-blue campaign-status">TIMELINE</span>
+                                </div>
+                                <div class="col-xs-10 col-sm-10 col-md-10  m-b-0 m-t-10 b-white " data-ng-if="vm.campaign.status =='CAMPAIGN_QUOTATION_REJECTED'"><span class="b-dark-blue campaign-status">QUOTATION REJECTED</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 p-b-10 col-md-6 col-sm-12 col-xs-12 profile-label ">Due Date </div>
+                            <div class="col-lg-3 p-b-10 col-md-6 col-sm-12 col-xs-12 f-19">
+                                <span ng-if="vm.campaign.endTime">{{vm.campaign.endTime | datetime}}</span>
+                                <span ng-if="!vm.campaign.startTime">Not set</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-12  col-md-12 col-sm-12 col-xs-12 p-t-10 p-10 p-b-0 p-0">
+                            <div class="col-lg-3 p-b-10 col-md-6 col-sm-12 col-xs-12 profile-label">Created by</div>
+                            <div class="col-lg-3 p-b-10 col-md-6 col-sm-12 col-xs-12 f-blue f-19">{{vm.campaign.createdBy}}
+                            </div>
+                            <div class="col-lg-3  p-b-10 col-md-6 col-sm-12 col-xs-12 profile-label">Campaign manager </div>
+                            <div class="col-md-3">
+                                <ui-select ng-model="vm.campaign.campaignManager" theme="selectize">
+                                    <ui-select-match placeholder="Campaign Manager"> <span>{{vm.campaign.campaignManager.firstName}}</span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="c in vm.users | filter: $select.search">
+                                        <span ng-bind-html="c.firstName | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="col-lg-12  col-md-12 col-sm-12 col-xs-12  p-t-10 p-10 p-b-0 p-0">
+                            <div class="col-lg-3 p-b-10 col-md-6 col-sm-12 col-xs-12 profile-label">Created Date</div>
+                            <div class="col-lg-3 p-b-10 col-md-6 col-sm-12 col-xs-12 f-19">{{vm.campaign.createdDate|datetime}}
+                            </div>
+                            <div class="col-lg-3 p-b-10 col-md-6 col-sm-12 col-xs-12 profile-label ">Brief Status</div>
+                            <div class="col-lg-3  p-b-10 col-md-6 col-sm-12 col-xs-12 p-0">
+                                <div class="col-xs-12 col-sm-10 col-md-10  m-b-0 m-t-10 b-white " ng-if="vm.campaign.status =='CAMPAIGN_BRIEF_REJECTED'"><span class="b-red campaign-status">Rejected</span>
+                                </div>
+                                <div class=" col-xs-10 col-sm-10 col-md-10  m-b-0 m-t-10 b-white " data-ng-if="vm.campaign.status =='CAMPAIGN_SUBMITTED'"><span class="b-green campaign-status">Submitted</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 m-t-5p">
+                            <hr>
+                        </div>
+                        <!-- <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12 p-10 text-right font-999 p-b-0">{{max}}</div> -->
+                        <div class="col-md-1 pointer p-0" ng-repeat="brief in Campaigns.briefQuestions">
+                            <span class="col-sm-12 col-xs-12 col-md-12 col-lg-12 p5 pointer " ng-click="vm.hrclick(Campaigns , $index)"><hr class="hr"
+                                            ng-class="{'answerd-brief':brief.answer , 'no-brief': !brief.answer}">
+                                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12">
+                        <p class="profile-label">{{asset_index+1}} {{Campaigns.currentQuestion.campaignBriefQuestion.question}}</p>
+                        <p class="col-sm-12 col-xs-12 col-md-12 col-lg-12 p5 f-12 f-898989" ng-if="Campaigns.currentQuestion.campaignBriefQuestion.comment">Note. {{Campaigns.currentQuestion.campaignBriefQuestion.comment}}</p>
+                        <form action="#">
+                            <div class="m-b-20">
+                                <div class="">
+                                    <textarea class="form-control text-area-custom m-h-100 txt-area b-r-5" ng-model="Campaigns.currentQuestion.answer" ng-disabled="vm.campaign.status == 'CAMPAIGN_SUBMITTED'"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-4 col-md-3 col-sm-12 col-xs-12 col-lg-offset-4 col-md-offset-3 p-0 pb10 m-b-20  ">
+                        <button class="btn btn-skills blue-btn m-b-20" ng-click="vm.previousQst(Campaigns)" ng-disabled="Campaigns.prev"><i class="zmdi zmdi-chevron-left pr10"></i> Prev</button>
+                        <button class="btn btn-skills blue-btn m-b-20" ng-click="vm.nextQst(Campaigns)" ng-disabled="Campaigns.next">Next <i class="zmdi zmdi-chevron-right pl10"></i>
+                        </button>
+                    </div>
+                    <div class="col-lg-12  col-md-12 col-sm-12 col-xs-12  p-t-20 custom-comment-tab">
+                        <tabset class="">
+                            <tab heading="Comment">
+                                <div class="col-lg-12  col-md-12 col-sm-12 col-xs-12  p-t-20">
+                                    <textarea class="form-control comment-txt col-lg-12  col-md-12 col-sm-12 col-xs-12 comment-textarea text-area-custom m-h-100" placeholder="Post your comment here..." ng-model="vm.comment"></textarea>
+                                    <div class="col-lg-12  col-md-12 col-sm-12 col-xs-12 text-right m-b-20 p-t-20">
+                                        <!-- <button ngf-change="uploadFiles($files)" ngf-select ng-model="campaignComemntFiles" class="cursor-pointer btn btn-primary col-md2" ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true">Add new</button>
+                                        <span ng-repeat="files in campaignComemntFiles">{{files.name}}</span> -->
+                                        <button class="btn btn-skills blue-btn" ng-click="vm.submitComment()">Post</button>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <hr>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12  bg-white b-b-f5f5f5" ng-repeat="comment in vm.campaign.campaignComments">
+                                        <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9 pull-left p-0 p-r-10">
+                                            <div class="dropdown-messages-box p-10">
+                                                <a class="pull-left">
+                                                    <img alt="image" class="img-circle h-40" src="img/user.png">
+                                                </a>
+                                                <div class="media-body p-l-20">
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 font-15a3d3 font-14p p-0"><span class="f-blue t-capitalize">{{comment.createdBy}}</span><span class="font-555 p-l-10">added a comment</span><span class="font-898989 p-l-10">on {{comment.createdDate |datetime}}</span>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 font-14p font-898989 m-t-20 p-0">{{comment.comment}}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <hr>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12 col-lg-offset-5 col-md-offset-3 p-0 p-b-10 m-b-20">
+                                        <button class="btn btn-skills darkblue-btn m-b-20 b-white" ng-click="LoadComment()"><i class="zmdi zmdi-chevron-down pull-right p-r-10 b-white"></i> More</button>
+                                    </div> -->
+                                </div>
+                            </tab>
+                            <tab heading="Brief Rejection" ng-if="vm.campaign.klientType=='ENTERPRISE'">
+                                <div class="col-md-12 p-0" ng-repeat="document in Campaigns.briefComments">
+                                    <div class="col-md-12 p-0">
+                                        <span>
+                                            <img src="img/icons/human-icon.png" alt="default picture" class="img-thumbnail img-responsive img-circle icon-table" ng-if="!document.user.picture">
+                                            <img src="{{document.user.picture}}" alt="profile picture" class="img-thumbnail img-responsive img-circle icon-table" ng-if="document.user.picture">
+                                        </span>
+                                        <!-- <span class="f-blue f-600 m-l-10">Amanda Pierce</span> -->
+                                        <span class="f-blue f-600 m-l-10 t-capitalize">{{document.user.firstName}}</span>
+                                        <span> added a comment - </span>
+                                        <span ng-if="document.createdDate">{{document.createdDate | datetime }}</span>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-12 deliverable-comment" ng-if="document.comment">{{document.comment}}</div>
+                                        <div class="col-md-12 deliverable-comment" ng-if="!document.comment">No comment</div>
+                                    </div>
+                                    <div class="col-md-12 m-t-15 m-b-15">
+                                        <hr>
+                                    </div>
+                                </div>
+                            </tab>
+                        </tabset>
+                    </div>
+                </uib-tab>
+                <uib-tab heading="Support Materials" class="tabCampaign">
+                    <div class="col-md-12 col-xs-12">
+                        <div class="col-md-12 m-b-20 f-16" ng-if="vm.campaign.supportingMaterials.length>0">Attached files</div>
+                        <span ng-if="vm.campaign.supportingMaterials.length>0" class="dwl-file col-md-3" ng-repeat="document in vm.campaign.supportingMaterials"> <a target="_self" href="{{document.fileFullPath}}" download="{{document.fileFullPath}}"><i class="zmdi zmdi-download btn-dwl-i static"></i> 
+                        </a>
+                        <span title="remove" class="zmdi zmdi-close-circle zmdi-hc-fw pointer pull-right" ng-click="vm.removeSupportingMaterial(document)"></span>
+                        <span class="blue f-12 p-l-2p">{{document.fileName|
+                            cut:true:25:'...'}}</span>
+                        <div class="blue f-12 p-l-8p">{{document.modifiedDate| datetime}}</div>
+                        </span>
+                        <div ngf-drop ngf-select ng-model="vm.bufferDocs" class="drop-box col-md-12 m-b-20 m-t-20 pointer" ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true" accept="image/*,application/pdf" ngf-pattern="'image/*,application/pdf'">Drop pdfs or images here or click to upload</div>
+                        <div ngf-no-file-drop class="col-md-6">File Drag/Drop is not supported for this browser</div>
+                        <ul class="col-md-6" ng-if="vm.bufferDocs.length > 0">
+                            Files:
+                            <li style="font: smaller" ng-repeat="buffDoc in vm.bufferDocs">{{buffDoc.name}}
+                                <button class="btn btn-primary" ng-click="vm.uploadFileFromPool(buffDoc)">Upload</button>
+                            </li>
+                        </ul>
+                    </div>
+                </uib-tab>
+                <uib-tab heading="Assets" class="tabCampaign">
+                    <div class=" col-md-12">
+                        <div class="team-row">
+                            <div class="col-lg-4 col-md-6">
+                                <select data-placeholder="Select category" class=" ui dropdown btn input-border w-100p" ng-model="vm.selectedAssetGroup" ng-change="vm.selectedAssetSubGroup.assets = {}" ng-options="c.name group by c.group for c in vm.assetGroups">
+                                    <option value="">Select category</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <select placeholder="Select sub category" class=" ui dropdown btn input-border w-100p" ng-model="vm.selectedAssetSubGroup" ng-change="vm.showAssets()" ng-options="c.name group by c.group for c in vm.selectedAssetGroup.assetSubGroups">
+                                    <option value="">Select sub category</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 text-center">
+                                <div><span class="f-18">Total = </span><span class="f-40 f-600">{{vm.campaign.totalKredits}}</span><span class="f-blue f-18"> Kredits</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="f-20 p-l-20 p-t-20">Templates</div>
+                            <div class="f-16 t-a-c p-l-20" ng-if="vm.selectedAssetSubGroup.assets.length == 0 && vm.selectedAssetSubGroup">No Templates</div>
+                            <div class="asset-template-item pull-left pointer p-10 m-t-10" ng-repeat="asset in vm.selectedAssetSubGroup.assets" ng-if="vm.selectedAssetSubGroup.assets.length>0">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p-0">
+                                    <a class="ci-avatar" ng-repeat="img in asset.documents">
+                                        <img width="100%" height="100px" src="{{img.fileFullPath}}" alt="team member" ng-click="vm.addCampaignAsset(asset)" ng-if="img.fileFullPath">
+                                    </a>
+                                    <img width="100%" height="100px" src="img/asset.PNG" alt="team member" ng-click="vm.addCampaignAsset(asset)" ng-if="!asset.url">
+                                    <div class="team-info text-center p-10">
+                                        <span class="f-16">{{asset.name}}</span>
+                                        <br>
+                                        <span class="f-18 bold">{{asset.kredits}}</span>
+                                        <span>Kredits</span>
+                                    </div>
+                                    <div class="text-right p-b-5">
+                                        <span ng-click="assetdescription()"><i class="zmdi zmdi-info-outline f-16"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--- Right bar starts here -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p-t-30 brief-rightbar-wrapper p-b-20 p-0">
+                            <div class="card-header b-header-gray">
+                                <h2 class="f-white f-500">Asset Kredit</h2>
+                                <!-- <ul class="actions">
+                                    <li>
+                                    </li>
+                                    <li>
+                                        <a href="" tooltip-placement="top" tooltip="Delete" ng-click="vm.removeAsset()">
+                                            <i class="zmdi zmdi-delete f-white"></i>
+                                        </a>
+                                    </li>
+                                </ul> -->
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p-0" ng-if=" vm.campaign.campaignAssets.length == 0">
+                                <div class="no-asset">Current there are no Asset yet</div>
+                            </div>
+                            <table class="table table-asset text-left m-t-40 p-0" ng-if=" vm.campaign.campaignAssets.length>0">
+                                <thead>
+                                    <tr>
+                                        <th class="w-25" sortable="false" style="background:none">
+                                            <label class="checkbox checkbox-inline">
+                                                <input type="checkbox" ng-change="deptSelectAll(deptIsAllSelected)" ng-model="deptIsAllSelected">
+                                                <i class="input-helper"></i>
+                                            </label>
+                                        </th>
+                                        <th>#</th>
+                                        <th>Asset name</th>
+                                        <th>Kredit</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                        <th>Add Info</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="campaignAsset in  vm.campaign.campaignAssets">
+                                        <td>
+                                            <label class="checkbox checkbox-inline">
+                                                <input type="checkbox" ng-model="campaignAsset.selected" ng-change="oneCheckboxSelected(campaignAsset)">
+                                                <i class="input-helper"></i>
+                                            </label>
+                                        </td>
+                                        <td>{{$index+1}}</td>
+                                        <td title="{{campaignAsset.asset.name}}"><span ng-if="campaignAsset.asset.name">{{campaignAsset.asset.name| cut:true:20:'...'}}</span><span ng-if="campaignAsset.customAssetName">{{campaignAsset.customAssetName}}</span></td>
+                                        <td>{{campaignAsset.eachAssetKredits}}</td>
+                                        <td>
+                                            <button class="btn counter-minus" ng-click="vm.addInfo(campaignAsset, true)">-</button>
+                                            <input type="text" valid-number class="counter-field-asset" ng-model="campaignAsset.assetQuantity" ng-disabled="true">
+                                            <button class="btn counter-plus" ng-click="vm.addQty(campaignAsset)">+</button>
+                                        </td>
+                                        <td>{{campaignAsset.totalKredits}}</td>
+                                        <td class="text-center">
+                                            <a href="" tooltip-placement="top" tooltip="Add info" ng-click="vm.addInfo(campaignAsset)">
+                            <i class="addinfo-count" ng-if="campaignAsset.assetQuantity > 1">{{campaignAsset.assetQuantity}}</i>
+                            <i class="zmdi zmdi-playlist-plus f-22"></i>
+                        </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-md-offset-4 m-t-50">
+                                <button ng-click="vm.updateAssets()" class="btn btn-blue" ng-disabled="vm.campaign.status == 'CAMPAIGN_SUBMITTED' || vm.campaign.status == 'CAMPAIGN_DONE' || vm.campaign.status == 'CAMPAIGN_INPROGRESS' || vm.campaign.quotation.status=='APPROVED'">Update Assets</button>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab heading="Task" class="tabCampaign">
+                    <div class="row">
+                        <div class="col-md-12 card-body m-t-20">
+                            <div class="card-header b-header-gray">
+                                <h2 class="f-white f-500">Tasks</h2>
+                                <ul class="actions">
+                                    <li>
+                                        <a href="" tooltip-placement="top" uib-tooltip="Add" ng-click="vm.createCustomTask()"> <i class="zmdi zmdi-plus-circle-o f-white"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <table datatable="ng" id="myTable" dt-options="vm.dtOptions" class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="w-25" sortable="false" style="background: none">
+                                            <label class="checkbox checkbox-inline">
+                                                <input type="checkbox" ng-change="vm.toggleAll()" ng-model="vm.isAllSelected"> <i class="input-helper"></i>
+                                            </label>
+                                        </th>
+                                        <th class="t-normal">ID</th>
+                                        <th class="t-normal">Time Required</th>
+                                        <th class="t-normal">Start Date</th>
+                                        <th class="t-normal">End Date</th>
+                                        <th class="t-normal">Asset</th>
+                                        <th class="t-normal"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="campaignTask in vm.campaign.campaignTasks">
+                                        <td>
+                                            <label class=" checkbox checkbox-inline">
+                                                <input type="checkbox" ng-model="campaignTask.selected" ng-change="vm.optionToggled(campaignTask)"> <i class="input-helper"></i>
+                                            </label>
+                                        </td>
+                                        <td class="col-xs-2">{{ campaignTask.id }}</td>
+                                        <td class="col-xs-2"><span ng-if="campaignTask.days">{{campaignTask.days}} Days </span><span ng-if="campaignTask.hours"> {{campaignTask.hours}} hours</span><span ng-if="campaignTask.minutes"> {{campaignTask.minutes}} minutes</span><span ng-if="!campaignTask.days || !campaignTask.hours || !campaignTask.minutes">Not set</span></td>
+                                        <td class="col-xs-2">{{ campaignTask.startTime }} <span ng-if="!campaignTask.startTime">Not set</span></td>
+                                        <td class="col-xs-2">{{ campaignTask.endTime }} <span ng-if="!campaignTask.endTime">Not set</span></td>
+                                        <td class="col-xs-2">{{ campaignTask.name }}</td>
+                                        <td class="col-xs-2">
+                                            <button class="btn  b-r-5 w-100p h-37 b-blue f-white bold" ng-click="vm.viewTaskTimeline(campaignTask)">View / Assign</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab heading="Members" class="tabCampaign">
+                    <div class=" col-md-12">
+                        <h4 class=" f-gray col-md-offset-5 f-500">Add Memeber</h4>
+                        <ui-select class="col-md-5 col-md-offset-3" ng-model="vm.campaignUser" theme="selectize">
+                            <ui-select-match>
+                                <span>{{vm.campaignUser.firstName}}&nbsp;{{vm.campaignUser.lastName}}</span>
+                            </ui-select-match>
+                            <ui-select-choices repeat="user in vm.campaign.companyBranch.users | filter: $select.search">
+                                <span ng-bind-html="user.firstName | highlight: $select.search"></span>
+                                <span ng-bind-html="user.lastName | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <div class="m-l-2p col-md-12" ng-if="vm.campaignUser">
+                            <h4 class="f-gray m-t-30 m-b-20 col-md-offset-5">Permissions</h4>
+                            <div class="checkbox col-md-3 m-b-20" ng-repeat="perm in vm.campaign.permissionList">
+                                <label>{{perm.permissionName}}
+                                    <input type="checkbox" ng-model="perm.selected"> <i class="input-helper"></i>
+                                </label>
+                            </div>
+                            <button class="btn b-dark-blue f-white b-r-15 col-md-offset-5 m-t-20 m-w-8p" ng-click="vm.addCampaignUser()">Add</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 card-body m-t-20">
+                            <div class="card-header b-header-gray">
+                                <h2 class="f-white">Members</h2>
+                                <ul class="actions">
+                                    <li>
+                                        <a href="" tooltip-placement="top" uib-tooltip="Delete" ng-click="vm.removeMembers()"> <i class="zmdi zmdi-delete f-white"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <table datatable="ng" id="myTable" dt-options="vm.dtOptions" class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="w-25" sortable="false" style="background: none">
+                                            <label class="checkbox checkbox-inline">
+                                                <input type="checkbox" ng-change="vm.selectAllUserPerms()" ng-model="vm.campaign.userPemAllSelected"> <i class="input-helper"></i>
+                                            </label>
+                                        </th>
+                                        <th class="t-normal w-4p">ID</th>
+                                        <th class="t-normal">Name</th>
+                                        <th class="t-normal">Role</th>
+                                        <th class="t-normal">Group</th>
+                                        <th class="t-normal" ng-show="">Date</th>
+                                        <th class="t-normal w-4p bg-img-none text-right">View</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="userCampaign in vm.campaign.userCampaigns | filter:vm.filter" ng-class-odd="'alt'">
+                                        <td>
+                                            <label class=" checkbox checkbox-inline">
+                                                <input type="checkbox" ng-model="userCampaign.selected"> <i class="input-helper"></i>
+                                            </label>
+                                        </td>
+                                        <td>{{ userCampaign.user.id }}</td>
+                                        <td>
+                                            <img ng-if="userCampaign.user.picture" src="{{userCampaign.user.picture}}" class="img-thumbnail img-responsive img-circle img-table-thumb">
+                                            <img ng-if="!userCampaign.user.picture" src="img/user.png" class="img-thumbnail img-responsive img-circle img-table-thumb">{{userCampaign.user.firstName}}</td>
+                                        <td ng-hide="u.show">{{userCampaign.user.userRole.role}}</td>
+                                        <td ng-hide="u.show">{{userCampaign.user.userGroup.groupName}}</td>
+                                        <td class="child" colspan="2" ng-show="u.show">
+                                            <div class="row  m-t-20 m-b-20">
+                                                <h4 class="f-gray t-a-c">Permissions</h4>
+                                                <div class="checkbox col-md-2 col-md-offset-2" ng-repeat="ucp in userCampaign.userCampaignPermissions">
+                                                    <label>{{ucp.campaignPermission.permissionName}}
+                                                        <input type="checkbox" checked ng-disabled="true"> <i class="input-helper"></i>
+                                                    </label>
+                                                </div>
+                                                <br>
+                                            </div>
+                                            <!-- <button class="btn b-dark-blue  f-white b-r-15 col-md-3" ng-click="vm.updateUserCampaignPerms(userCampaign)">Save</button> -->
+                                        </td>
+                                        <td class="text-right" ng-click="u.show = !u.show" title="View Permissions"><a href=""><i
+                                        ng-hide="u.show" class="zmdi zmdi-plus f-18 f-600"></i><i
+                                        ng-show="u.show" class="zmdi zmdi-minus f-18 f-600"></i></a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab heading="Deliverables" class="tabCampaign">
+                    <div class="col-md-12 add-member">
+                        <div class="col-md-12  add-member">
+                            <div class="col-md-12 p-0">
+                                <textarea type="text" class="w-100p h-100 p-l-10 p-t-10 resize-none txt-area" placeholder="Add your comment here..." ng-model="vm.campaign.newComment"></textarea>
+                            </div>
+                            <div class="col-md-12 text-right p-0 m-t-20 m-b-20" ng-if="!document.status">
+                                <span ng-if="vm.deliverDocs.length > 0"></span>
+                                <span ng-repeat="deliverDoc in vm.deliverDocs">
+                                        <span class="b-light-gray p-5">{{deliverDoc.name | cut:true:20:'...'}}</span>
+                                <button class="btn btn-upload b-light-blue" ng-click="vm.addCampaignDeliverable(deliverDoc)">Submit</button>
+                                </span>
+                                <button ngf-change="uploadFiles($files)" ngf-select ng-model="vm.deliverDocs" class="btn btn-upload m-r-10" ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true" ng-disabled="vm.campaign.status =='CAMPAIGN_DONE'">Upload</button>
+                            </div>
+                            <div class="error-font" ng-show="vm.invalidfile">Invalid File format please upload PNG or JPG files</div>
+                        </div>
+                        <div class="col-md-12 m-b-15">
+                            <hr>
+                        </div>
+                        <div class="col-md-12" ng-repeat="document in vm.campaign.campaignDeliverables" ng-if="vm.campaign.campaignDeliverables.length > 0">
+                            <div class="col-md-12 p-0" ng-repeat="file in document.campaignDeliverables" ng-if="document.campaignDeliverables">
+                                <div class="col-md-12 p-0">
+                                    <span><img src="img/icons/human-icon.png" alt="" class="img-thumbnail img-responsive img-circle icon-table ng-scope"></span>
+                                    <!-- <span class="f-blue f-600 m-l-10">Amanda Pierce</span> -->
+                                    <span class="f-blue f-600 m-l-10 t-capitalize">{{file.createdBy}}</span>
+                                    <span> added a comment - </span>
+                                    <span ng-if="document.createdDate">{{document.createdDate | datetime }}</span>
+                                    <span>
+                                        <span ng-if="document.status" ng-class="{'btn-accept':document.status=='APPROVED'|| document.status=='ACCEPT' || document.status=='ACCEPTED','btn-reject':document.status=='REJECTED'||document.status=='REJECT'}">{{document.status}}</span>
+                                    <span ng-if="!document.status" class="btn-accept btn-pending m-l-10">PENDING APPROVAL</span>
+                                    </span>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-12 deliverable-comment" ng-if="document.comment">{{document.comment}}</div>
+                                    <div class="col-md-12 deliverable-comment" ng-if="!document.comment">No comment</div>
+                                </div>
+                                <div class="col-md-12">
+                                    <span class="b-light-gray p-10 m-l-25">{{file.fileName | cut:true:20:'...'}}
+                                        <a class="m-l-10" target="_self" href="{{file.fileFullPath}}" download="{{file.fileFullPath}}">
+                                            <i class="zmdi zmdi-download btn-dwl-i static"></i> 
+                                        </a>
+                                    </span>
+                                    <span ng-if="!file.fileName">No file</span>
+                                </div>
+                                <div ng-if="!document.campaignDeliverables">
+                                    <span>No File</span>
+                                </div>
+                                <div class="col-md-12 m-t-15 m-b-15">
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab heading="Feedback" class="tabCampaign">
+                    <div class="col-md-12 card-body m-t-20">
+                        <div class="card-header b-blue">
+                            <h2 class="f-white f-500">Klient feedback</h2>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="t-normal">Campaign Name</th>
+                                    <th class="t-normal">Campaign Id</th>
+                                    <th class="t-normal text-center">Speed</th>
+                                    <th class="t-normal text-center">Quality</th>
+                                    <th class="t-normal text-center">NPS</th>
+                                    <th class="t-normal text-center">Additional feedback</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="pointer" ng-dblclick="vm.viewTransaction(feedback)" ng-if="vm.campaign.speed">
+                                    <td>{{vm.campaign.campaignName}}</td>
+                                    <td>{{vm.campaign.campaignId}}</td>
+                                    <td class="t-a-c">{{vm.campaign.speed}}</td>
+                                    <td class="t-a-c">{{vm.campaign.quality}}</td>
+                                    <td class="t-a-c">{{vm.campaign.nps}}</td>
+                                    <td class="t-a-c">{{vm.campaign.additionalFeedback}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </uib-tab>
+                <uib-tab heading="Quotation" class="tabCampaign" ng-if="vm.campaign.klientType=='ENTERPRISE'">
+                    <div class="col-md-12">
+                        <div>
+                            <div>
+                                <div class="col-md-12 text-left">
+                                    <h4 class="modal-title f-25 f-300">Quotation</h4>
+                                    <span>{{vm.campaign.campaignId}}</span>
+                                    <div class="m-t-10 m-b-10"><img src="img/....png" class="w-60" alt="... img"></div>
+                                </div>
+                                <div class="col-md-8 text-left">
+
+                                    <div>
+                                        <h6>To</h6></div>
+                                    <div class="t-capitalize"><b>{{vm.company.companyName}}</b></div>
+                                    <address>
+                                        {{vm.branchAddress.address1}},
+                                        <br> {{vm.branchAddress.address2}},
+                                        <br> {{vm.branchAddress.postalCode}} {{vm.branchAddress.city}},
+                                        <br> {{vm.branchAddress.state}} {{vm.branchAddress.country}}
+                                    </address>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-12 m-b-7">
+                                        <div class="col-md-6 text-right l-h-30">Issued Date: </div>
+                                        <div class="col-md-6 text-left">
+                                            <span class="width200 l-h-30" ng-if="vm.campaign.quotation">{{vm.campaign.quotation.createdDate | dateonly}}</span>
+                                            <span class="width200 l-h-30" ng-if="!vm.campaign.quotation">{{vm.newDate| dateonly}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 m-b-7">
+                                        <div class="col-md-6 text-right l-h-40">Currency </div>
+                                        <div class="col-md-6 text-left">
+                                            <ui-select ng-model="vm.campaign.quotation.currency" theme="selectize" ng-change="vm.currencyChekcer()">
+                                                <ui-select-match> <span>{{vm.campaign.quotation.currency}}</span></ui-select-match>
+                                                <ui-select-choices repeat="currency in vm.currencyList| filter: $select.search">
+                                                    <span ng-bind-html="currency | highlight: $select.search"></span>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 m-b-7" ng-if="vm.campaign.quotation.currency =='MYR'">
+                                        <div class="col-md-6 text-right l-h-30">GST: </div>
+                                        <div class="col-md-6 text-left l-h-30">6%</div>
+                                    </div>
+                                    <div class="col-md-12 m-b-7">
+                                        <div class="col-md-6 text-right l-h-30">Status: </div>
+                                        <div class="col-md-6 text-left">
+                                            <span ng-if="vm.campaign.quotation.status" class="l-h-30" ng-class="{'f-green':vm.campaign.quotation.status=='APPROVED','f-red':vm.campaign.quotation.status=='REJECTED','f-orange':vm.campaign.quotation.status=='GENERATED'}">{{vm.campaign.quotation.status}}</span>
+                                            <span ng-if="!vm.campaign.quotation.status" class="l-h-30 f-orange">Not sent</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="col-md-12 card-body p-0">
+                                    <div class="card-header b-blue">
+                                        <h2 class="f-white f-500 t-uppercase">Item List</h2>
+                                        <ul class="actions">
+                                            <li>
+                                                <a href="" tooltip-placement="top" uib-tooltip="Add Asset" ng-click="vm.addCustomAsset()">
+                                                    <i class="zmdi zmdi-plus-circle-o f-white"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="t-normal w-36p">Description</th>
+                                            <th class="t-normal text-center w-20p">Amount</th>
+                                            <th class="t-normal text-center w-20p">Quantity</th>
+                                            <th class="t-normal text-center w-20p">Sub Total</th>
+                                            <th class="t-normal text-center w-4p">&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="5" class="b-gray f-white t-capitalize">{{vm.campaign.campaignName}}</td>
+                                        </tr>
+                                        <tr ng-repeat="campaignAsset in vm.campaign.campaignAssets">
+                                            <td class="t-capitalize" title="{{campaignAsset.asset.name}}">{{campaignAsset.asset.name| cut:true:30:'...'}}</td>
+                                            <td class="text-center">
+                                                <input class="w-25p text-center editable-input" type="number" ng-model="campaignAsset.eachAssetKredits" ng-change="vm.assetcreditchage()">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="w-25p text-center editable-input quotation-input" type="text" ng-model="campaignAsset.assetQuantity" disabled="true">
+                                            </td>
+                                            <td class="text-center f-700">{{campaignAsset.subTotal | number: 2}}</td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                        <tr ng-repeat="campaignAsset in vm.campaign.campaignCustomAssets">
+                                            <td class="t-capitalize">
+                                                <input type="text" class="form-control editable-input t-capitalize" ng-model="campaignAsset.customAssetName">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="w-25p text-center editable-input" type="number" ng-model="campaignAsset.eachAssetKredits" ng-change="vm.assetcreditchage()">
+                                            </td>
+                                            <td class="text-center">
+                                                <input class="w-25p text-center editable-input" type="number" ng-model="campaignAsset.assetQuantity" ng-change="vm.assetcreditchage()">
+                                            </td>
+                                            <td class="text-center f-700">{{campaignAsset.eachAssetKredits * campaignAsset.assetQuantity}}</td>
+                                            <td>
+                                                <button class="btn" ng-click="vm.removeCustomAsset($index)"><i class="zmdi zmdi-delete"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="vm.campaign.quotation.currency =='MYR'">
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                            <td class="f-700 text-center">GST 6%</td>
+                                            <td class="f-700 text-center">{{ vm.campaign.quotation.GST | number: 2}}</td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-12 text-right">
+                                    <span ng-repeat="file in vm.campaign.quotation.documents" class="m-r-10p">
+                                        <img src="{{file.fileFullPath}}" width="150" height="100" alt="klient signature">
+                                    </span>
+                                    <span class="f-18 f-700 t-uppercase">Total = </span>
+                                    <span class="f-40 f-700">{{vm.totalAmount.toFixed(2)}}</span>
+                                    <span class="f-14 f-700 f-blue">{{vm.campaign.quotation.currency}}</span>
+                                </div>
+                                <div class="col-md-12 text-right m-t-30 m-b-30">
+                                    <button class="btn-blue b-dark-blue t-uppercase f-16" ng-click="vm.sendQuotation(vm.campaign.companyBranch.branchName)" ng-if="vm.campaign.quotation.status != 'APPROVED' && (vm.campaign.status == 'CAMPAIGN_DRAFT' || vm.campaign.status == 'CAMPAIGN_QUOTATION_REJECTED')" ng-disabled="!vm.campaign.quotation.currency">Send Quotation</button>
+                                    <button class="btn-blue b-dark-blue t-uppercase f-16" ng-click="vm.sendInvoice(vm.campaign.companyBranch.branchName)" ng-if="vm.campaign.quotation.status == 'APPROVED'">Send Invoice</button>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-12 p-0">
+                                    <h4>Comments</h4>
+                                    <hr class="m-t-0">
+                                </div>
+                                <div class="col-md-12 p-0" ng-repeat="document in Campaigns.quotationComments">
+                                    <div class="col-md-12 p-0">
+                                        <span>
+                                            <img src="img/icons/human-icon.png" alt="default picture" class="img-thumbnail img-responsive img-circle icon-table" ng-if="!document.user.picture">
+                                            <img src="{{document.user.picture}}" alt="profile picture" class="img-thumbnail img-responsive img-circle icon-table" ng-if="document.user.picture">
+                                        </span>
+                                        <span class="f-blue f-600 m-l-10 t-capitalize">{{document.user.firstName}}</span>
+                                        <span> added a comment - </span>
+                                        <span ng-if="document.createdDate">{{document.createdDate | datetime }}</span>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-12 deliverable-comment" ng-if="document.comment">{{document.comment}}</div>
+                                        <div class="col-md-12 deliverable-comment" ng-if="!document.comment">No comment</div>
+                                    </div>
+                                    <div class="col-md-12 m-t-15 m-b-15">
+                                        <hr>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </uib-tab>
+            </uib-tabset>
+            </div>
+        </div>
+    </div>

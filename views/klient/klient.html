@@ -1,0 +1,767 @@
+<div class="container content-center">
+    <div class="row">
+        <div class="col-md-12 card-body m-t-20">
+            <div class="card-header b-blue">
+                <h2 class="f-white f-500">Klients</h2>
+                <ul class="actions">
+                    <li>
+                        <input type="search" placeholder="filter" ng-model="vm.filter" class="dt-search">
+                    </li>
+                    <li>
+                        <a href="" tooltip-placement="left" uib-tooltip="Add Klient" ng-click="vm.addKlient()">
+                            <i class="zmdi zmdi-plus-circle-o f-white"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <form name="search" class="search-container col-md-12">
+                <div class="col-md-2 p-l-0">
+                    <input type="text" class="klient-name" placeholder="Company Name" ng-model="vm.searchCriteria.companyName">
+                </div>
+                <div class="col-md-2 p-l-0">
+                    <input type="text" class="klient-name" placeholder="Branch Name" ng-model="vm.searchCriteria.branchName">
+                </div>
+                <div class="col-md-2">
+                    <ui-select ng-model="vm.searchCriteria.klientType" theme="selectize">
+                        <ui-select-match placeholder="Klient Type"> <span>{{vm.searchCriteria.klientType}}</span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="klientType in vm.klientTypeList | filter: $select.search">
+                            <span ng-bind-html="klientType | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="col-md-2">
+                    <ui-select ng-model="vm.searchCriteria.status" theme="selectize">
+                        <ui-select-match placeholder="Status"><span>{{vm.searchCriteria.status}}</span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="status in vm.statusList | filter: $select.search">
+                            <span ng-bind-html="status | highlight: $select.search"></span> </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="col-md-2">
+                    <ui-select ng-model="vm.searchCriteria.timePeriod" theme="selectize">
+                        <ui-select-match placeholder="Latest"> <span>{{vm.searchCriteria.timePeriod}}</span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="dateType in vm.dateTypeList | filter: $select.search">
+                            <span ng-bind-html="dateType | highlight: $select.search"></span> </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-apply" ng-click="vm.search()">Apply</button>
+                </div>
+            </form>
+            <!-- <i class="fa fa-spin fa-refresh fa-5x" id="loader"></i> -->
+            <table datatable="ng" id="myTable" dt-options="vm.dtOptions" class="table">
+                <thead>
+                    <tr>
+                        <th class="w-25 bg-img-none" sortable="false">
+                            <label class="checkbox checkbox-inline">
+                                <input type="checkbox" ng-change="vm.toggleAll()" ng-model="vm.isAllSelected">
+                                <i class="input-helper"></i>
+                            </label>
+                        </th>
+                        <th class="t-normal w-350">Company Name</th>
+                        <th class="t-normal text-center w-300">Klient Type</th>
+                        <th class="t-normal text-center w-300">Branch Name</th>
+                        <!-- <th class="t-normal text-center w-300">Status</th> -->
+                        <th class="t-normal text-center w-150">Created Date</th>
+                        <th class="t-normal w-10 bg-img-none text-right">View</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="companyBranch in vm.companyBranches | filter:vm.filter" ng-click="showDetail(companyBranch)" ng-class-odd="'alt'" ng-init="companyBranch.show=false">
+                        <td ng-if="!companyBranch.show">
+                            <label class=" checkbox checkbox-inline">
+                                <input type="checkbox" ng-model="companyBranch.selected" ng-change="vm.toggleOne(companyBranch)">
+                                <i class="input-helper"></i>
+                            </label>
+                        </td>
+                        <td ng-if="!companyBranch.show">
+                            <img src="img/icons/human-icon.png" class="img-thumbnail img-responsive img-circle img-table-thumb" ng-if="!companyBranch.company.companyLogo"> <img src="{{companyBranch.company.companyLogo}}" class="img-thumbnail img-responsive img-circle img-table-thumb" ng-if="companyBranch.company.companyLogo"> <span class="t-capitalize">{{companyBranch.company.companyName}}</span>
+                        </td>
+                        <td class="text-center" ng-if="!companyBranch.show">
+                            <span ng-if="companyBranch.company.companyType" ng-bind="companyBranch.company.companyType"></span>
+                            <span ng-if="!companyBranch.company.companyType">_</span>
+                        </td>
+                        <td class="text-center" ng-if="!companyBranch.show">
+                            <span ng-if="companyBranch.branchName" ng-bind="companyBranch.branchName"></span>
+                            <span ng-if="!companyBranch.branchName">_</span>
+                        </td>
+                        <!--  <td class="f-white text-center" ng-if="!companyBranch.show">
+                            <span class="klient-status m-auto w-150" ng-class="{'b-green': companyBranch.company.status=='ACTIVE','b-red': companyBranch.company.status=='INACTIVE'}">{{companyBranch.company.status}}</span>
+                            <span class="klient-status m-auto w-150 b-red" ng-if="!companyBranch.company.status">Unknown</span>
+                        </td> -->
+                        <td class="text-center" ng-if="!companyBranch.show">{{companyBranch.createdDate | dateonly}}</td>
+                        <td class="child p-l-0 p-t-0 p-r-0" colspan="7" ng-if="companyBranch.show">
+                            <div class="col-md-2 profile-img-section">
+                                <div class="m-t-20">
+                                    <img src="{{companyBranch.company.companyLogo}}" class="img-thumbnail img-responsive img-circle center-block profile-img" ng-if="companyBranch.company.companyLogo">
+                                </div>
+                                <div>
+                                    <img src="img/icons/human-icon-large.png" class="img-thumbnail img-responsive img-circle center-block profile-img" ng-if="!companyBranch.company.companyLogo">
+                                </div>
+                                <div class="text-center m-t-10">
+                                    <div class="btn-file btn-update m-auto">
+                                        <span class="">Select</span>
+                                        <input type="file" id={{companyBranch.id}} onchange="angular.element(this).scope().vm.uploadPic(this)">
+                                    </div>
+                                </div>
+                                <div class="m-l-20 col-md-12" ng-repeat="company in companyBranch.company.brandGuidelines">
+                                    <span class=" dwl-file m-t-20 m-b-20">
+                                         <a target="_self" href="{{company.fileFullPath}}" download="{{company.fileFullPath}}">
+                                            <i class="zmdi zmdi-download btn-dwl-i static"></i>
+                                        </a>
+                                        <span class="blue f-12 m-l-7">Brand Guidline</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-10 klient-profile p-0">
+                                <div>
+                                    <span class="text-right pull-right m-r-20" ng-show="companyBranch.show">
+                                        <a href="" ng-click="vm.getKlientDetails(companyBranch)"> 
+                                            <i ng-if="!companyBranch.show" class="zmdi zmdi-plus f-18 f-600"></i> 
+                                            <i ng-if="companyBranch.show" class="zmdi zmdi-minus f-18 f-600 l-h-40 m-r-10"></i> 
+                                        </a>
+                                    </span>
+                                </div>
+                                <uib-tabset justified="true">
+                                    <uib-tab heading="Profile" active="true" class="tab">
+                                        <div class="col-md-12 col-lg-12">
+                                            <div class="col-md-10 col-lg-10">
+                                                <h3 class="m-b-25 t-capitalize">{{companyBranch.company.companyName}}</h3>
+                                            </div>
+                                            <div class="col-md-2 col-lg-2 text-right m-b-5">
+                                                <button class="btn btn-skills" ng-click="vm.updateProfile(companyBranch)">Save</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <form data-ng-submit="" class="" novalidate>
+                                                <div class="col-lg-5 col-md-5">
+                                                    <div>
+                                                        <div>
+                                                            <label for="companyName">Company Name</label>
+                                                        </div>
+                                                        <input type="text" id="companyName" class="w-100p p-l-10 normal-input t-capitalize" ng-model="companyBranch.company.companyName">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-5 col-md-5 col-lg-5 col-md-5 col-lg-offset-1 col-md-offset-1">
+                                                    <div>
+                                                        <div>
+                                                            <label for="noCampaign">No of Campaigns</label>
+                                                        </div>
+                                                        <div type="text" id="noCampaign" class="w-100p p-l-10 disabled-input t-capitalize" ng-bind="companyBranch.campaigns.length" ng-if="companyBranch.campaigns" ng-disabled="true"></div>
+                                                        <div type="text" id="noCampaign" class="w-100p p-l-10 disabled-input t-capitalize" ng-bind="0" ng-if="!companyBranch.campaigns" ng-disabled="true"></div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col-lg-5 col-md-5 m-t-15">
+                                                    <div>
+                                                        <div>
+                                                            <label for="companyEmail">Company Email</label>
+                                                        </div>
+                                                        <input type="text" id="companyEmail" ng-model="companyBranch.emailId" class="w-100p p-l-10 normal-input">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-5 col-md-5 col-lg-offset-1 col-md-offset-1 m-t-15">
+                                                    <div>
+                                                        <div>
+                                                            <label for="currentKredit">Current Kredits</label>
+                                                        </div>
+                                                        <input type="text" id="currentKredit" class="w-100p p-l-10 disabled-input f-blue t-capitalize" ng-model="companyBranch.kreditBalance" ng-disabled="true">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-5 col-md-5 m-t-15">
+                                                    <div>
+                                                        <div>
+                                                            <label for="companyName">Klient Type</label>
+                                                        </div>
+                                                        <input type="text" id="companyName" class="w-100p p-l-10 disabled-input t-capitalize" ng-model="companyBranch.company.companyType" ng-disabled="true">
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="col-lg-5 col-md-5 m-t-15">
+                                                    <div>
+                                                        <div>
+                                                            <label for="currentKredit">Company ID</label>
+                                                        </div>
+                                                        <input type="text" id="currentKredit" ng-model="companyBranch.companyId" class="w-100p p-l-10 normal-input t-capitalize">
+                                                    </div>
+                                                </div> -->
+                                                <div class="col-lg-5 col-md-5 selectfield-custom m-t-15 col-lg-offset-1 col-md-offset-1">
+                                                    <div>
+                                                        <div>
+                                                            <label for="contactPerson">Company Branch</label>
+                                                        </div>
+                                                        <input type="text" id="contactPerson" ng-model="companyBranch.branchName" class="w-100p p-l-10 normal-input t-capitalize">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-5 col-md-5 selectfield-custom m-t-15">
+                                                    <div>
+                                                        <div>
+                                                            <label for="klientStatus">Status</label>
+                                                        </div>
+                                                        <input type="text" id="klientStatus" class="w-100p p-l-10 disabled-input f-blue t-capitalize" ng-model="companyBranch.status" ng-disabled="true">
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="col-lg-4 col-md-4 col-lg-offset-1 col-md-offset-1 selectfield-custom m-t-15">
+                                                    <div>
+                                                        <label for="currency">Currency</label>
+                                                    </div>
+                                                    <ui-select ng-model="companyBranch.tempCurrency" theme="selectize">
+                                                        <ui-select-match> <span>{{companyBranch.tempCurrency}}</span></ui-select-match>
+                                                        <ui-select-choices repeat="currency in vm.currencyList| filter: $select.search">
+                                                            <span ng-bind-html="currency | highlight: $select.search"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                                <div class="col-lg-4 col-md-4 m-t-15">
+                                                    <div>
+                                                        <div>
+                                                            <label for="contactPerson">Contact Person</label>
+                                                        </div>
+                                                        <input type="text" id="contactPerson" ng-model="companyBranch.contactPerson" class="w-100p p-l-10 normal-input t-capitalize">
+                                                    </div>
+                                                </div> -->
+                                                <div class="col-lg-5 col-md-5 col m-t-15 col-lg-offset-1 col-md-offset-1">
+                                                    <div class="col-lg-5 col-md-5 p-l-0">
+                                                        <div>
+                                                            <label for="lastName">Country Code</label>
+                                                        </div>
+                                                        <ui-select ng-model="companyBranch.countryCode" theme="selectize">
+                                                            <ui-select-match><span>{{companyBranch.countryCode}}</span>
+                                                            </ui-select-match>
+                                                            <ui-select-choices class="dd-country-code" repeat="country in vm.countryCodes | filter: $select.search">
+                                                                <span ng-bind-html="country.name | highlight: $select.search"></span>
+                                                                <span ng-bind-html="country.dial_code | highlight: $select.search"></span>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                    </div>
+                                                    <div class="col-lg-7 col-md-7 p-r-0">
+                                                        <div>
+                                                            <div>
+                                                                <label for="phoneNumber">Phone Number</label>
+                                                            </div>
+                                                            <input type="phone" id="phoneNumber" class="w-100p p-l-10 normal-input t-capitalize" ng-model="companyBranch.phoneNumber">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-5 col-md-5  selectfield-custom m-t-15">
+                                                    <div>
+                                                        <div>
+                                                            <label for="lastName">Time Zone</label>
+                                                        </div>
+                                                        <ui-select ng-model="companyBranch.timeZone" theme="selectize">
+                                                            <ui-select-match> <span>{{companyBranch.timeZone}}</span>
+                                                            </ui-select-match>
+                                                            <ui-select-choices repeat="timeZone in vm.timeZones | filter: $select.search">
+                                                                <span ng-bind-html="timeZone.value | highlight: $select.search"></span>
+                                                                <span ng-bind-html="timeZone.name  | highlight: $select.search"></span>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 m-t-25">
+                                                    <h5>Address</h5>
+                                                </div>
+                                                <div class="col-lg-5 col-md-5 m-t-15">
+                                                    <div>
+                                                        <label for="address1">Line 1</label>
+                                                        <input type="text" id="address1" class="w-100p p-l-10 normal-input t-capitalize" name="line1" ng-model="companyBranch.address.address1">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-5 col-md-5 col-md-offset-1 m-t-15">
+                                                    <div>
+                                                        <label for="address2">Line 2</label>
+                                                        <input type="text" id="address2" class="w-100p p-l-10 normal-input t-capitalize" name="line2" ng-model="companyBranch.address.address2">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-5 col-md-5 m-t-15">
+                                                    <div>
+                                                        <label for="postalcode">Postal Code</label>
+                                                        <input type="text" id="postalCode" class="w-100p p-l-10 normal-input t-capitalize" name="postalCode" ng-model="companyBranch.address.postalCode">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-5 col-md-5 col-md-offset-1 m-t-15">
+                                                    <div>
+                                                        <label for="city">City</label>
+                                                        <input type="text" id="city" class="w-100p p-l-10 normal-input t-capitalize" name="city" ng-model="companyBranch.address.city">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-5 col-md-5 selectfield-custom m-t-15">
+                                                    <div>
+                                                        <div>
+                                                            <label for="lastName">Country</label>
+                                                        </div>
+                                                        <ui-select ng-model="companyBranch.address.country" theme="selectize">
+                                                            <ui-select-match> <span>{{companyBranch.address.country}}</span>
+                                                            </ui-select-match>
+                                                            <ui-select-choices repeat="country in vm.countries | filter: $select.search">
+                                                                <span ng-bind-html="country.name | highlight: $select.search"></span>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-5 col-md-5 col-md-offset-1 m-t-15">
+                                                    <div>
+                                                        <label for="city">State</label>
+                                                        <input type="text" id="state" class="w-100p p-l-10 normal-input t-capitalize" name="state" ng-model="companyBranch.address.state">
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </uib-tab>
+                                    <!-- kredit tab section  -->
+                                    <!--companyBranch.company.companyType == 'ENTERPRISE' -->
+                                    <uib-tab ng-hide="true" heading="Kredit" class="tab">
+                                        <div class="col-md-12">
+                                            <div class="col-md-2 col-lg-2 col-3 text-center">
+                                                <div class="chart chart-1" pie-chart-progress-bar pie-chart-progress-value="companyBranch.kreditBalance" pie-chart-progress-total="companyBranch.kreditBalance"></div>
+                                                <p class="text-center t-uppercase m-t-10">Company Kredits
+                                                </p>
+                                            </div>
+                                            <span class="graph-minus col-md-1 text-center w-50"><i class="zmdi zmdi-minus"></i></span>
+                                            <div class="col-md-2 col-lg-2 col-3 text-center">
+                                                <div class="chart chart-2" pie-chart-progress-bar pie-chart-progress-value="companyBranch.tempTransfer" pie-chart-progress-total="companyBranch.kreditBalance"></div>
+                                                <p class="text-center t-uppercase m-t-10">Total Deduction
+                                                </p>
+                                            </div>
+                                            <span class="graph-equal col-md-1 text-center w-50"><span>=</span></span>
+                                            <div class="col-md-3 graph-total">
+                                                <span>{{companyBranch.balanceKredits}}</span>
+                                                <p class="graph-bal-text">Kredits after deduction changes</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 card-body m-t-20 p-0">
+                                            <div class="card-header b-blue">
+                                                <h2 class="f-white f-500">Department Kredit Limit</h2>
+                                            </div>
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="t-normal">Department</th>
+                                                        <th class="t-normal">Current Limit</th>
+                                                        <th class="t-normal">Set Limit</th>
+                                                        <th class="t-normal">New Limit</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="group in companyBranch.userGroups">
+                                                        <td>{{ group.groupName }}</td>
+                                                        <td>{{ group.kreditLimit }}</td>
+                                                        <td>
+                                                            <button ng-disabled="companyBranch.kreditBalance<1" class="btn counter-minus" ng-click="vm.minus(group, companyBranch)">-</button>
+                                                            <input valid-number class="counter-field-asset" ng-disabled="companyBranch.kreditBalance<1" ng-model="group.kreditLimitTemp" ng-change="vm.onChangeTransferedKredits(group, companyBranch)">
+                                                            <button ng-disabled="companyBranch.kreditBalance<1" class="btn counter-plus" ng-click="vm.plus(group, companyBranch)">+</button>
+                                                        </td>
+                                                        <td>{{ group.inBucket }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <button class="btn b-r-5 m-l-48p m-t-15 h-37 b-blue f-white bold set-limit-btn" ng-click="vm.updateKreditLimits(companyBranch)">Set Limit</button>
+                                        </div>
+                                    </uib-tab>
+                                    <!-- Campaign tab section  -->
+                                    <uib-tab heading="Campaigns" class="tab">
+                                        <div class=" col-md-12">
+                                            <div class="card-header b-header-gray">
+                                                <h2 class="f-white t-uppercase f-500">Campaign List</h2>
+                                                <ul class="actions">
+                                                    <li>
+                                                        <a href="" tooltip-placement="top" uib-tooltip="Add" ng-click="vm.createCampaign(companyBranch)"> <i class="zmdi zmdi-plus-circle-o f-white"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="" tooltip-placement="top" uib-tooltip="Remove" ng-click="vm.removeCampaign(companyBranch)" ng-disabled="vm.editAsset"> <i class="zmdi zmdi-delete f-white"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <table datatable="ng" id="myTable" dt-options="vm.dtOptions" class="table ">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="w-25" sortable="false" style="background: none">
+                                                            <label class="checkbox checkbox-inline">
+                                                                <input type="checkbox" ng-change="vm.toggleAllCampaigns(companyBranch, companyBranch.campaigns)" ng-model="companyBranch.isAllCampaignsSelected">
+                                                                <i class="input-helper"></i>
+                                                            </label>
+                                                        </th>
+                                                        <th class="t-normal">Campaign ID</th>
+                                                        <th class="t-normal">Campaign Name</th>
+                                                        <th class="t-normal text-center">Total Asset</th>
+                                                        <th class="t-normal text-center">Total Kredits</th>
+                                                        <th class="t-normal text-center">Last Updated</th>
+                                                        <th class="t-normal text-center">Status</th>
+                                                        <th class="t-normal text-right bg-img-none">View</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="pointer" ng-repeat="campaign in companyBranch.campaigns | filter:vm.filter | orderBy : 'createdDate' : true" ng-model="item.Selected" ng-dblclick="vm.viewCampaign(companyBranch, campaign)" ng-class-odd="'alt'">
+                                                        <td>
+                                                            <label class=" checkbox checkbox-inline">
+                                                                <input type="checkbox" ng-model="campaign.selected" ng-change="vm.toggleOneCampaign(companyBranch, campaign)">
+                                                                <!-- ng-disabled="campaign.status !='CAMPAIGN_DRAFT'" -->
+                                                                <i class="input-helper"></i>
+                                                            </label>
+                                                        </td>
+                                                        <td>{{campaign.campaignId}}</td>
+                                                        <td>{{campaign.campaignName | capitalize | cut:true:20:'...'}}</td>
+                                                        <td class="text-center">{{campaign.noOfAssets}}</td>
+                                                        <td class="text-center">{{campaign.totalKredits}}</td>
+                                                        <td class="text-center">{{campaign.createdDate | date:'dd MMM yyyy'}}</td>
+                                                        <td class="text-center">
+                                                            <span class=" klient-status m-auto w-150 b-gray" ng-if="campaign.status =='CAMPAIGN_DRAFT'">DRAFT</span>
+                                                            <span class="klient-status m-auto w-150 b-blue" data-ng-if="campaign.status =='CAMPAIGN_IN_BUCKET'">BUCKET</span>
+                                                            <span class="klient-status m-auto w-150 b-green" data-ng-if="campaign.status =='CAMPAIGN_SUBMITTED'">SUBMITTED</span>
+                                                            <span class="klient-status m-auto w-150 b-orange" data-ng-if="campaign.status =='CAMPAIGN_DONE'">CLOSED</span>
+                                                            <span class="klient-status m-auto w-150 b-blue" data-ng-if="campaign.status =='CAMPAIGN_TIMELINE'"> TIMELINE</span>
+                                                            <span class="klient-status m-auto w-150 b-orange" data-ng-if="campaign.status =='CAMPAIGN_INPROGRESS'"> INPROGRESS</span>
+                                                            <span class="klient-status m-auto w-150 b-red" data-ng-if="campaign.status =='CAMPAIGN_QUOTATION_REJECTED'"> QUOTATION REJECTED</span>
+                                                            <span class="klient-status m-auto w-150 b-green" data-ng-if="campaign.status =='CAMPAIGN_QUOTATION_APPROVED'"> QUOTATION APPROVED</span>
+                                                            <span class="klient-status m-auto w-150 b-red" data-ng-if="campaign.status =='CAMPAIGN_QUOTATION_REJECTED"> QUOTATION REJECTED</span>
+                                                            <span class="klient-status m-auto w-150 b-red" data-ng-if="campaign.status =='CAMPAIGN_BRIEF_REJECTED'"> BRIEF REJECTED</span>
+                                                        </td>
+                                                        <td class="w-40 text-right f-18"><i class="zmdi zmdi-info-outline" ng-click="vm.viewCampaign(companyBranch, campaign)"></i>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!-- chart - comment for now -->
+                                            <!-- <div class="chartCampaign" pie-chart-progress-bar="campaign.briefCompletionPercent"></div> -->
+                                        </div>
+                                    </uib-tab>
+                                    <!-- User tab section  -->
+                                    <uib-tab heading="Users" class="tab">
+                                        <div class="col-md-12 card-body p-0">
+                                            <div class="card-header b-header-gray">
+                                                <h2 class="f-white f-500 t-uppercase">Users List</h2>
+                                                <ul class="actions">
+                                                    <li>
+                                                        <a href="" tooltip-placement="top" uib-tooltip="Add" ng-click="vm.addUser(companyBranch)">
+                                                            <i class="zmdi zmdi-plus-circle-o f-white"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="" tooltip-placement="top" uib-tooltip="Remove" ng-click="vm.deleteUsers(companyBranch)" ng-disabled="vm.editAsset">
+                                                            <i class="zmdi zmdi-delete f-white"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <table datatable="ng" id="myTable" dt-options="vm.dtOptions" class="table ">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="w-25" sortable="false" style="background: none">
+                                                            <label class="checkbox checkbox-inline">
+                                                                <input type="checkbox" ng-change="vm.toggleAllUsers(companyBranch, companyBranch.users)" ng-model="companyBranch.isAllUsersSelected"> <i class="input-helper"></i>
+                                                            </label>
+                                                        </th>
+                                                        <th class="t-normal w-240">Name</th>
+                                                        <th class="t-normal w-240">Personal EmailId</th>
+                                                        <th class="t-normal w-240">Phone Number</th>
+                                                        <th class="t-normal w-150">Department</th>
+                                                        <th class="t-normal w-150">Role</th>
+                                                        <th class="t-normal w-240 text-center">Status</th>
+                                                        <th class="t-normal text-center">Created Date</th>
+                                                        <!-- <th class="t-normal w-10 text-right bg-img-none">View</th> -->
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="pointer" ng-repeat="user in companyBranch.users | filter:vm.filter | orderBy : 'createdDate' : true" ng-model="item.Selected" ng-dblclick="vm.viewUser(user)" ng-class-odd="'alt'">
+                                                        <td>
+                                                            <label class=" checkbox checkbox-inline">
+                                                                <input type="checkbox" ng-model="user.selected" ng-change="vm.toggleOneUser(companyBranch, user)">
+                                                                <i class="input-helper"></i>
+                                                            </label>
+                                                        </td>
+                                                        <td>
+                                                            <img src="{{user.picture}}" class="img-thumbnail img-responsive img-circle img-table-thumb" ng-if="user.picture">
+                                                            <img src="img/icons/human-icon-large.png" class="img-thumbnail img-responsive img-circle img-table-thumb" ng-if="!user.picture"> {{ user.firstName }}
+                                                        </td>
+                                                        <td class="t-lowercase">{{user.personalEmailId}}</td>
+                                                        <td class="t-lowercase">{{user.phoneNumber}}</td>
+                                                        <td><span ng-if="user.userGroup.groupName">{{user.userGroup.groupName}}</span><span ng-if="!user.userGroup.groupName">_</span>
+                                                        </td>
+                                                        <td>{{user.userRole.role}}</td>
+                                                        <td><span class="klient-status m-auto w-150" ng-class="{'b-green': user.status=='ACTIVE','b-green': user.status=='AVAILABLE' || user.status=='VERIFIED','b-red': user.status=='INACTIVE','b-light-gray': user.status=='POTENTIAL','b-dark-gray': user.status=='UNASSIGNED','b-orange': user.status=='SIGNUP'}" ng-bind="user.status" ng-if="user.status"></span><span ng-if="!user.status">_</span>
+                                                        </td>
+                                                        <td class="text-center">{{user.createdDate | dateonly}}</td>
+                                                        <!-- <td class="text-right f-18"><i class="zmdi zmdi-info-outline" ng-click="vm.viewUser(user)"></i>
+                                                        </td> -->
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </uib-tab>
+                                    <!-- Department tab section  -->
+                                    <uib-tab heading="Departments" class="tab">
+                                        <div class="col-md-12 card-body p-0">
+                                            <div class="card-header b-header-gray">
+                                                <h2 class="f-white f-500 t-uppercase">Department List</h2>
+                                                <ul class="actions">
+                                                    <li>
+                                                        <a href="" tooltip-placement="top" uib-tooltip="Add" ng-click="vm.addDepartment(companyBranch)"> <i class="zmdi zmdi-plus-circle-o f-white"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="" tooltip-placement="top" uib-tooltip="Remove" ng-click="vm.deleteDepartments(companyBranch)" ng-disabled="vm.editAsset"> <i class="zmdi zmdi-delete f-white"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <table datatable="ng" id="myTable" dt-options="vm.dtOptions" class="table ">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="w-25" sortable="false" style="background: none">
+                                                            <label class="checkbox checkbox-inline">
+                                                                <input type="checkbox" ng-change="vm.toggleAllUserGroups(companyBranch, companyBranch.userGroups)" ng-model="companyBranch.isAllUserGroupsSelected"> <i class="input-helper"></i>
+                                                            </label>
+                                                        </th>
+                                                        <th class="t-normal">Department Name</th>
+                                                        <th class="t-normal text-center">Created Date</th>
+                                                        <th class="t-normal text-center">Last Modified Date</th>
+                                                        <th class="t-normal text-center">Created By</th>
+                                                        <th class="t-normal w-10 text-right bg-img-none">View</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="pointer" ng-repeat="userGroup in companyBranch.userGroups | filter:vm.filter | orderBy : 'createdDate' : true" ng-model="item.Selected" ng-dblclick="vm.viewUserGroup(userGroup)" ng-class-odd="'alt'">
+                                                        <td>
+                                                            <label class=" checkbox checkbox-inline">
+                                                                <input type="checkbox" ng-model="userGroup.selected" ng-change="vm.toggleOneUserGroup(companyBranch, userGroup)"> <i class="input-helper"></i>
+                                                            </label>
+                                                        </td>
+                                                        <td>{{userGroup.groupName}}</td>
+                                                        <td class="text-center">{{userGroup.createdDate | dateonly }}</td>
+                                                        <td class="text-center">{{userGroup.modifiedDate | dateonly }}</td>
+                                                        <td class="text-center">{{userGroup.createdBy}}</td>
+                                                        <td class="text-right f-18"><i class="zmdi zmdi-info-outline" ng-click="vm.viewUserGroup(userGroup)"></i>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </uib-tab>
+                                    <!-- Role tab section  -->
+                                    <uib-tab heading="Roles" class="tab">
+                                        <div class="col-md-12 p-0">
+                                            <div class="card-header b-header-gray">
+                                                <h2 class="f-white f-500 t-uppercase">Roles List</h2>
+                                                <ul class="actions">
+                                                    <li>
+                                                        <a href="" tooltip-placement="top" uib-tooltip="Add" ng-click="vm.addKlientRoles(companyBranch)"> <i class="zmdi zmdi-plus-circle-o f-white"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="" tooltip-placement="top" uib-tooltip="Remove" ng-click="vm.removeKlientRoles(companyBranch)">
+                                                            <i class="zmdi zmdi-delete f-white"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <table datatable="ng" id="myTable" dt-options="vm.dtOptions" class="table ">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="w-25" sortable="false" style="background: none">
+                                                            <label class="checkbox checkbox-inline">
+                                                                <input type="checkbox" ng-change="vm.toggleAllUserRoles(companyBranch, companyBranch.userRoles)" ng-model="companyBranch.isAllUserRolesSelected"> <i class="input-helper"></i>
+                                                            </label>
+                                                        </th>
+                                                        <th class="t-normal w-350">Role Name</th>
+                                                        <th class="t-normal text-center">Created Date</th>
+                                                        <th class="t-normal text-center">Last Modified Date</th>
+                                                        <th class="t-normal text-center">Created By</th>
+                                                        <th class="t-normal w-10 text-right bg-img-none">View</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="userRole in companyBranch.userRoles | filter:vm.filter | orderBy : 'createdDate' : true" ng-model="item.Selected" ng-dblclick="vm.viewUserRole(userRole)" ng-class-odd="'alt'">
+                                                        <td>
+                                                            <label class=" checkbox checkbox-inline">
+                                                                <input type="checkbox" ng-model="userRole.selected" ng-change="vm.toggleOneUserRole(companyBranch, userRole)">
+                                                                <i class="input-helper"></i>
+                                                            </label>
+                                                        </td>
+                                                        <td>{{userRole.role}}</td>
+                                                        <td class="text-center">{{userRole.createdDate | dateonly }}</td>
+                                                        <td class="text-center">{{userRole.modifiedDate | dateonly }}</td>
+                                                        <td class="text-center">{{userRole.createdBy}}</td>
+                                                        <td class="text-right f-18"><i class="zmdi zmdi-info-outline" ng-click="vm.viewUserRole(userRole)"></i>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </uib-tab>
+                                    <!-- Transaction tab section  -->
+                                    <uib-tab heading="Transactions" class="tab">
+                                        <div class="col-md-12 card-body p-0">
+                                            <div class="card-header trans">
+                                                <uib-tabset>
+                                                    <uib-tab ng-if="companyBranch.company.companyType != 'ENTERPRISE'" heading="Buy" class="tab transaction">
+                                                        <div>
+                                                            <table datatable="ng" id="myTable2" dt-options="vm.dtOptions" class="table table-hover" ng-if="companyBranch.company.companyType != 'ENTERPRISE'">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th class="t-normal w-120">Order ID</th>
+                                                                        <th class="t-normal w-240">Payment ID</th>
+                                                                        <th class="t-normal text-center w-120">Total Amount</th>
+                                                                        <th class="t-normal text-center w-120">Tax</th>
+                                                                        <th class="t-normal text-center w-120">Currency Type</th>
+                                                                        <th class="t-normal text-center w-120">Total Kredits</th>
+                                                                        <th class="t-normal text-center w-120">Status</th>
+                                                                        <th class="t-normal text-center w-120">Purchase Date</th>
+                                                                        <th class="t-normal text-center w-120">Expire Date</th>
+                                                                        <th class="t-normal text-center w-4p bg-img-none">View</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr ng-repeat="order in companyBranch.orders | filter:vm.filter" ng-click="showDetail(u.user)" ng-class-odd="'alt'" class="pointer" ng-dblclick="vm.viewOrder(order)">
+                                                                        <td>{{ order.orderId }}</td>
+                                                                        <td>{{ order.paymentId }}</td>
+                                                                        <td class="text-center">{{order.totalTaxAmount}}</td>
+                                                                        <td class="text-center">{{order.totalTaxAmount}}</td>
+                                                                        <td class="text-center">{{order.currencyType}}</td>
+                                                                        <td class="text-center">{{order.totalKredits}}</td>
+                                                                        <td class="text-center"><span class="klient-status b-orange">{{order.orderStatus}}</span>
+                                                                        </td>
+                                                                        <td class="text-center">{{order.createdDate | dateonly}}</td>
+                                                                        <td class="text-center">
+                                                                            <div ng-controller="DatepickerDemoCtrl" class="application-picker">
+                                                                                <div class="p-b-10" ng-class="{ 'is-opened': opened2 == true }">
+                                                                                    <div class="" ng-class="{ 'fg-toggled': opened2 == true }">
+                                                                                        <div class="input-group border-gray expiry-cal">
+                                                                                            <input type="text" ng-click="open($event, 'opened2')" is-open="opened2" class="form-control p-l-10 " ng-change="vm.updateOrderExpireDate(order)" datepicker-popup="dd/MM/yyyy" show-weeks="false" ng-model="order.expireDate" min-date="minDate" datepicker-options="dateOptions" ng-required="true" close-text="Close" date-disabled="disabled(date, mode)" />
+                                                                                            <label class="input-group-btn bg-white" for="date-fld" ng-click="open($event, 'opened2')" is-open="opened2">
+                                                                                                <span class="btn btn-default b-l0">
+                                                                                                 <span class="zmdi zmdi-calendar"></span>
+                                                                                                </span>
+                                                                                            </label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td class="text-right f-18"><i class="zmdi zmdi-info-outline" ng-click="vm.viewOrder(order)"></i>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </uib-tab>
+                                                    <uib-tab heading="Spend" class="transaction">
+                                                        <div>
+                                                            <table datatable="ng" id="myTable1" dt-options="vm.dtOptions" class="table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th class="t-normal">Campaign Name</th>
+                                                                        <th class="t-normal">No of Assets</th>
+                                                                        <th class="t-normal">Total Kredits</th>
+                                                                        <th class="t-normal">Date</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr ng-repeat="campaign in companyBranch.submittedCampaigns" ng-class-odd="'alt'">
+                                                                        <td class="">{{campaign.campaignName}}</td>
+                                                                        <td class="">{{campaign.noOfAssets}}</td>
+                                                                        <td class="">{{campaign.totalKredits}}
+                                                                        </td>
+                                                                        <td class="">{{campaign.createdDate | dateonly}}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </uib-tab>
+                                                    <uib-tab heading="Kredit" class="transaction">
+                                                        <div class="col-md-12">
+                                                            <form name="addKreditForm" novalidate>
+                                                                <div class="col-md-12">
+                                                                    <p>Add kredits</p>
+                                                                    <hr>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="col-md-4 p-0">
+                                                                        <div class="form-group">
+                                                                            <label for="assetTitle">Reason</label>
+                                                                            <input type="text" class="form-control input-border p-l-10" ng-model="vm.transaction.reason" name="addKreditReason" required>
+                                                                            <div ng-show="addKreditForm.$submitted || addKreditForm.addKreditReason.$touched" class="f-red">
+                                                                                <small class="p-absolute" ng-show="addKreditForm.addKreditReason.$error.required">Enter reason</small>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-2 p-r-0">
+                                                                        <div class="form-group">
+                                                                            <label for="assetTitle">Kredits</label>
+                                                                            <input type="text" class="form-control input-border p-l-10" name="addKredit" ng-pattern="/^\d+$/" ng-model="vm.transaction.kredits" required>
+                                                                            <div ng-show="addKreditForm.$submitted || addKreditForm.addKredit.$touched" class="f-red">
+                                                                                <small class="p-absolute" ng-show="addKreditForm.addKredit.$error.pattern">Numbers only</small>
+                                                                                <small class="p-absolute" ng-show="addKreditForm.addKredit.$error.required">Enter total amount</small>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-1">
+                                                                        <label for="assetTitle">&nbsp;</label>
+                                                                        <button class="btn btn-add m-l-20" ng-disabled="!addKreditForm.$valid" ng-click="vm.addKredits(companyBranch , addKreditForm)">Add</button>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12 m-t-20">
+                                                                    <p>Kredit details</p>
+                                                                    <hr>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="col-md-2 p-0">Total <span class="f-24 f-blue">{{companyBranch.kreditBalance}}</span> Kredits</div>
+                                                                    <div class="col-md-2"></div>
+                                                                </div>
+                                                            </form>
+                                                            <div class="col-md-12 m-t-25">
+                                                                <div class="card-header b-header-gray">
+                                                                    <h2 class="f-white t-uppercase f-500">Kredit added</h2>
+                                                                </div>
+                                                                <table datatable="ng" id="myTable" dt-options="vm.dtOptions" class="table ">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th class="t-normal">Added by</th>
+                                                                            <th class="t-normal">Created date</th>
+                                                                            <th class="t-normal text-center">Reason</th>
+                                                                            <th class="t-normal text-center">Kredits</th>
+                                                                            <th class="t-normal text-center">Total Kredits</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr class="pointer" ng-repeat="transaction in companyBranch.transactions | filter:vm.filter | orderBy : 'createdDate' : true" ng-model="item.Selected" ng-dblclick="vm.viewCampaign(companyBranch, campaign)" ng-class-odd="'alt'">
+                                                                            <td>{{transaction.user.firstName}} {{transaction.user.lastName}}</td>
+                                                                            <td>{{transaction.createdDate |date:'dd MMM yyyy'}}</td>
+                                                                            <td class="text-center">{{transaction.reason}}</td>
+                                                                            <td class="text-center">{{transaction.kredits}}</td>
+                                                                            <td class="text-center">{{transaction.totalKredits}}</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </uib-tab>
+                                                </uib-tabset>
+                                                <ul class="actions" ng-if="companyBranch.company.companyType == 'ENTERPRISE'">
+                                                    <li>
+                                                        <a href="" tooltip-placement="top" uib-tooltip="Record Payment" ng-click="vm.recordPayment()">
+                                                            <i class="zmdi zmdi-plus-circle-o f-white"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </uib-tab>
+                                </uib-tabset>
+                            </div>
+                        </td>
+                        <td class="text-right" ng-hide="companyBranch.show">
+                            <a href="" ng-click="vm.getKlientDetails(companyBranch)">
+                                <i ng-if="!companyBranch.show" class="zmdi zmdi-plus f-18 f-600"></i>
+                                <i ng-if="companyBranch.show" class="zmdi zmdi-minus f-18 f-600"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr>
+        </div>
+        <!--/container-->
+    </div>
